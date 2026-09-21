@@ -1,4 +1,4 @@
-/* Cotation 3000 V8.0.26 — pont des référentiels historiques + base communes vers l'éditeur Supabase */
+/* Cotation 3000 V8.0.31 — pont des référentiels historiques + base communes vers l'éditeur Supabase */
 (() => {
   'use strict';
   const byId=id=>document.getElementById(id);
