@@ -1,0 +1,129 @@
+/* Cotation 3000 V8.0.27 — édition ADMIN/SUPERADMIN, fenêtres prioritaires et tableaux responsives */
+.c3k-ref-editable{position:relative!important}
+.c3k-ref-edit-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);z-index:8;pointer-events:auto;touch-action:manipulation;border:1px solid #85754e;border-radius:999px;background:#fff;color:#65583b;width:28px;height:28px;display:grid;place-items:center;padding:0;font:900 14px/1 "Poppins",Arial,sans-serif;cursor:pointer;box-shadow:0 3px 9px rgba(0,0,0,.10)}
+.c3k-ref-edit-btn:hover,.c3k-ref-edit-btn:focus-visible{background:#85754e;color:#fff;outline:none}
+.c3k-ref-add-btn{margin-left:auto;margin-right:8px;border:1px solid #85754e;border-radius:8px;background:#85754e;color:#fff;padding:7px 10px;font:800 10px "Poppins",Arial,sans-serif;cursor:pointer;white-space:nowrap}
+.c3k-ref-add-btn:hover{filter:brightness(.94)}
+.c3k-ref-editor-backdrop{position:fixed;inset:0;z-index:250000;background:rgba(0,0,0,.62);display:grid;place-items:center;padding:18px}
+.c3k-ref-editor-backdrop[hidden]{display:none!important}
+.c3k-ref-editor{width:min(760px,calc(100vw - 28px));max-height:calc(100dvh - 36px);display:flex;flex-direction:column;overflow:hidden;background:#fff;border:2px solid #85754e;border-radius:14px;box-shadow:0 22px 70px rgba(0,0,0,.45);color:#24221e;font-family:"Poppins",Arial,sans-serif}
+.c3k-ref-editor-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #d8ccb0;background:#fff}
+.c3k-ref-editor-head>div:first-child{min-width:0;flex:1}.c3k-ref-editor-head h3{margin:0;color:#4f442d;font-size:14px}.c3k-ref-editor-head small{display:block;margin-top:2px;color:#85754e;font-size:9px;font-weight:700}
+.c3k-ref-editor-close{border:0;background:transparent;color:#6c6046;font-size:22px;cursor:pointer}
+.c3k-ref-editor form{display:flex;flex:1 1 auto;min-height:0;flex-direction:column;overflow:hidden}
+.c3k-ref-editor-body{flex:1 1 auto;min-height:0;overflow:auto;padding:14px}
+.c3k-ref-editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.c3k-ref-editor-field{display:grid;gap:4px;min-width:0}.c3k-ref-editor-field.is-wide{grid-column:1/-1}.c3k-ref-editor-field>span{font-size:9px;font-weight:800;color:#62583f;text-transform:none}
+.c3k-ref-editor-field input,.c3k-ref-editor-field textarea,.c3k-ref-editor-field select{width:100%;border:1px solid #d7cfbc;border-radius:8px;background:#fff;padding:8px 9px;color:#26231d;font:600 11px "Poppins",Arial,sans-serif}
+.c3k-ref-editor-field textarea{min-height:76px;resize:vertical}.c3k-ref-editor-field input:focus,.c3k-ref-editor-field textarea:focus{outline:2px solid rgba(133,117,78,.2);border-color:#85754e}.c3k-ref-editor-field input:disabled{background:#f4f2ed;color:#888;cursor:not-allowed}
+.c3k-ref-editor-hint{margin:0 0 12px;padding:8px 10px;border:1px solid #e3dbc7;border-radius:8px;background:#faf8f2;color:#6d6249;font-size:9px;line-height:1.45}
+.c3k-ref-media-box{grid-column:1/-1;display:grid;grid-template-columns:72px 1fr;gap:10px;align-items:center;padding:9px;border:1px solid #d8ccb0;border-radius:9px;background:#fbfaf6}.c3k-ref-media-preview{width:64px;height:64px;display:grid;place-items:center;border:2px solid #85754e;border-radius:10px;background:#fff;overflow:hidden;color:#85754e;font-size:9px;font-weight:900}.c3k-ref-media-preview img{max-width:90%;max-height:90%;object-fit:contain}.c3k-ref-media-copy{display:grid;gap:6px}.c3k-ref-media-copy strong{font-size:10px;color:#4f442d}.c3k-ref-media-copy input[type=file]{font-size:10px}
+.c3k-ref-editor-actions{flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:11px 14px;border-top:1px solid #e4dfd4;background:#fbfaf7;box-shadow:0 -4px 14px rgba(0,0,0,.05);position:relative;z-index:3}.c3k-ref-editor-actions .spacer{flex:1}.c3k-ref-editor-actions button{border-radius:8px;padding:7px 10px;font:800 10px "Poppins",Arial,sans-serif;cursor:pointer}.c3k-ref-save{border:1px solid #85754e;background:#85754e;color:#fff}.c3k-ref-cancel{border:1px solid #d5d0c6;background:#fff;color:#333}.c3k-ref-delete{border:1px solid #d5a5a5;background:#fff;color:#a92525}.c3k-ref-reset{border:1px solid #d8ccb0;background:#fff;color:#65583b}
+.c3k-ref-editor-status{margin:0 14px 10px;padding:7px 9px;border-radius:8px;background:#f4f1e8;color:#5f563f;font-size:9px}.c3k-ref-editor-status.is-error{background:#fff0f0;color:#902525}.c3k-ref-editor-status.is-ok{background:#eef8f1;color:#246739}
+.c3k-ref-overridden::before{content:"BDD";position:absolute;right:7px;top:7px;z-index:7;padding:2px 5px;border-radius:999px;background:#85754e;color:#fff;font:800 7px "Poppins",Arial,sans-serif;letter-spacing:.03em}
+@media(max-width:620px){.c3k-ref-editor-backdrop{padding:6px}.c3k-ref-editor{width:100%;max-height:calc(100dvh - 12px)}.c3k-ref-editor-grid{grid-template-columns:1fr}.c3k-ref-editor-field.is-wide,.c3k-ref-media-box{grid-column:1}.c3k-ref-add-btn{padding:6px 8px;font-size:9px}}
+
+@media(max-width:620px){.c3k-ref-editor-actions{flex-wrap:wrap}.c3k-ref-editor-actions .spacer{display:none}.c3k-ref-editor-actions button{flex:1 1 auto;min-height:38px}.c3k-ref-save{order:1;flex-basis:100%!important}.c3k-ref-cancel{order:2}.c3k-ref-delete,.c3k-ref-reset{order:3}}
+
+/* Référentiels historiques rendus en tableaux : réserve un espace au bouton d’édition. */
+.c3k-ref-edit-host{position:relative!important}
+td.c3k-ref-edit-host{padding-right:42px!important;padding-bottom:8px!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important;min-width:0!important}
+.c3k-ref-overridden-host::before{content:"BDD";position:absolute;right:7px;top:7px;z-index:7;padding:2px 5px;border-radius:999px;background:#85754e;color:#fff;font:800 7px "Poppins",Arial,sans-serif;letter-spacing:.03em}
+td.c3k-ref-overridden-host>.c3k-ref-edit-btn{right:6px;top:50%;bottom:auto;transform:translateY(-50%)}
+
+/* V8.0.22 — le bouton Modifier ne doit plus élargir les colonnes. */
+td.c3k-ref-edit-host>.c3k-ref-edit-btn{right:6px!important;top:50%!important;bottom:auto!important;transform:translateY(-50%)!important;max-width:none;width:28px;height:28px;white-space:nowrap;line-height:1}
+#isoReferenceModal table,
+#fuelReferenceModal table,
+#transportLexiconModal table,
+#accountReferenceModal table,
+#portReferenceModal table{width:100%!important;min-width:0!important;table-layout:fixed!important}
+#isoReferenceModal th,#isoReferenceModal td,
+#fuelReferenceModal th,#fuelReferenceModal td,
+#transportLexiconModal th,#transportLexiconModal td,
+#accountReferenceModal th,#accountReferenceModal td,
+#portReferenceModal th,#portReferenceModal td{white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important}
+
+/* Lexique : entêtes lisibles, fond doré clair + texte sombre. */
+.transport-lexicon-table thead th{background:#e8ddc6!important;color:#3f3524!important;border-right:1px solid #cdbd99!important;text-shadow:none!important}
+.transport-lexicon-table{min-width:0!important}
+
+/* Ajout d'une commune dans la barre principale sans déformer le compteur. */
+.toolbar-center .c3k-ref-add-btn{margin:0!important;flex:0 0 auto;padding:5px 9px;font-size:9px}
+
+/* La fenêtre d'édition reste au-dessus de tous les référentiels ouverts. */
+body:has(#c3kReferenceEditorBackdrop:not([hidden])) .c3k-ref-editor-backdrop{isolation:isolate}
+
+
+/* V8.0.24 — bouton + dédié pour l’ajout de villes, en haut à droite du tableau. */
+.c3k-commune-pagination-host{position:relative!important;min-height:36px}
+.c3k-commune-add-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:34px;height:34px;border:1px solid #85754e;border-radius:999px;background:#fff;color:#65583b;display:grid;place-items:center;font:900 20px/1 "Poppins",Arial,sans-serif;cursor:pointer;box-shadow:0 3px 9px rgba(0,0,0,.10);z-index:6}
+.c3k-commune-add-btn:hover,.c3k-commune-add-btn:focus-visible{background:#85754e;color:#fff;outline:none}
+.c3k-commune-add-hint{grid-column:1/-1}
+@media(max-width:700px){.c3k-commune-add-btn{width:30px;height:30px;font-size:18px;right:4px}}
+
+/* V8.0.27 — le bouton + reste parfaitement fixe malgré les règles hover de pagination. */
+.pagination .c3k-commune-add-btn{transition:background-color .14s ease,border-color .14s ease,color .14s ease,box-shadow .14s ease!important;transform:translateY(-50%)!important}
+.pagination .c3k-commune-add-btn:hover:not(:disabled),
+.pagination .c3k-commune-add-btn:focus-visible,
+.pagination .c3k-commune-add-btn:active{transform:translateY(-50%)!important}
+
+
+/* V8.0.27 — en-têtes des gros référentiels : Ajouter ne doit jamais chevaucher Fermer. */
+.world-ports-head>div:first-child,
+.maritime-reference-head>div:first-child,
+.customs-reference-head>div:first-child{
+  min-width:0;
+  flex:1 1 auto;
+}
+.world-ports-head>.c3k-ref-add-btn,
+.maritime-reference-head>.c3k-ref-add-btn,
+.customs-reference-head>.c3k-ref-add-btn{
+  width:auto!important;
+  min-width:88px!important;
+  height:35px!important;
+  flex:0 0 auto!important;
+  margin-left:auto!important;
+  margin-right:0!important;
+  padding:0 12px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border:1px solid #85754e!important;
+  border-radius:9px!important;
+  background:#85754e!important;
+  color:#fff!important;
+  font:800 10px/1 "Poppins",Arial,sans-serif!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+}
+.world-ports-head>#worldPortsClose,
+.maritime-reference-head>#maritimeReferenceClose,
+.customs-reference-head>#customsReferenceClose{
+  width:35px!important;
+  min-width:35px!important;
+  height:35px!important;
+  flex:0 0 35px!important;
+  margin:0!important;
+}
+.world-ports-head,
+.maritime-reference-head,
+.customs-reference-head{
+  column-gap:10px!important;
+}
+@media(max-width:620px){
+  .world-ports-head>.c3k-ref-add-btn,
+  .maritime-reference-head>.c3k-ref-add-btn,
+  .customs-reference-head>.c3k-ref-add-btn{
+    min-width:34px!important;
+    width:34px!important;
+    padding:0!important;
+    font-size:0!important;
+  }
+  .world-ports-head>.c3k-ref-add-btn::before,
+  .maritime-reference-head>.c3k-ref-add-btn::before,
+  .customs-reference-head>.c3k-ref-add-btn::before{
+    content:"+";
+    font:900 18px/1 "Poppins",Arial,sans-serif;
+  }
+}
