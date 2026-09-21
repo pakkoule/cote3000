@@ -2,12 +2,11 @@
  :root{--c3k-v8-bg:#181818;--c3k-v8-accent:#85754e;--c3k-v8-accent-soft:#f4f0e5;--c3k-v8-accent-line:#d8ccb0;--c3k-v8-card:#fff;--c3k-v8-muted:#6f6f6f;--c3k-v8-danger:#b52c2c;--c3k-v8-ok:#2f7d46;--c3k-top-tools-width:248px}
 /* Alignement strict recherche universelle / bloc compte */
 .universal-search-shell,.c3k-v8-account-shell{box-sizing:border-box!important;width:var(--c3k-top-tools-width)!important}
-.c3k-v8-account-actions{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 .c3k-v8-account-actions>*{box-sizing:border-box;min-width:0;width:100%}
 .c3k-v8-presence{box-sizing:border-box}
-.c3k-v8-account-shell{position:absolute;top:58px;left:10px;z-index:44;width:248px;display:grid;grid-template-columns:1fr;gap:5px;padding:5px;font-family:"Poppins",Arial,sans-serif;background:#fff;border:1px solid var(--c3k-v8-accent);border-radius:9px;box-shadow:0 5px 15px rgba(0,0,0,.16);color:#3b3528}
-.c3k-v8-account-actions{display:grid;grid-template-columns:1fr 1fr;gap:5px;width:100%}
-.c3k-v8-presence,.c3k-v8-account-btn,.c3k-v8-signup-shortcut{min-height:26px;border-radius:6px}
+.c3k-v8-account-shell{position:absolute;top:66px;left:10px;z-index:44;width:248px;display:grid;grid-template-columns:1fr;gap:6px;padding:6px;font-family:"Poppins",Arial,sans-serif;background:rgba(255,255,255,.97);border:1px solid var(--c3k-v8-accent);border-radius:10px;box-shadow:0 9px 24px rgba(67,56,31,.14);color:#3b3528;isolation:isolate;backdrop-filter:blur(3px)}
+.c3k-v8-account-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:5px;width:100%;align-items:stretch}.c3k-v8-account-actions.has-notify{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 31px}
+.c3k-v8-presence,.c3k-v8-account-btn,.c3k-v8-signup-shortcut,.c3k-v8-notify-btn{min-height:26px;border-radius:6px}
 .c3k-v8-account-btn,.c3k-v8-signup-shortcut{border:1px solid var(--c3k-v8-accent);background:#fff;color:#5c5138;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:0 7px;cursor:pointer;font-size:8px;font-weight:800;white-space:nowrap}
 .c3k-v8-account-btn{min-width:0}
 .c3k-v8-signup-shortcut{color:#5c5138}
@@ -15,6 +14,10 @@
 .c3k-v8-presence{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:0 7px;border:1px solid var(--c3k-v8-accent-line);background:var(--c3k-v8-accent-soft);color:#5f563f;font-size:8px;font-weight:800;white-space:nowrap}
 .c3k-v8-dot{width:6px;height:6px;border-radius:50%;background:#46b96b;box-shadow:0 0 0 2px rgba(70,185,107,.13)}
 .c3k-v8-account-badge{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:var(--c3k-v8-accent);font-size:7px;color:#fff}
+.c3k-v8-account-shell::before{content:"";position:absolute;inset:-7px -8px -10px -8px;z-index:-2;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,255,255,.28) 72%,rgba(255,255,255,0));filter:blur(.1px);pointer-events:none}
+.c3k-v8-account-shell::after{content:"";position:absolute;left:18px;right:-78px;bottom:-14px;height:24px;z-index:-1;border-top:2px solid rgba(133,117,78,.24);border-radius:50% 58% 0 0/100% 100% 0 0;transform:rotate(.8deg);pointer-events:none}
+.c3k-v8-notify-btn[hidden]{display:none!important}.c3k-v8-notify-btn{position:relative;box-sizing:border-box;width:31px!important;border:1px solid var(--c3k-v8-accent);background:#fff;color:#5c5138;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer}
+.c3k-v8-notify-btn:hover{background:var(--c3k-v8-accent);color:#fff}.c3k-v8-bell{font-size:11px;line-height:1}.c3k-v8-notify-dot{position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:#d33838;box-shadow:0 0 0 2px #fff}
 .c3k-v8-panel-backdrop{position:fixed;inset:0;z-index:610;background:rgba(0,0,0,.52);display:grid;place-items:center;padding:18px}
 .c3k-v8-panel-backdrop[hidden]{display:none}
 .c3k-v8-panel{width:min(420px,calc(100vw - 24px));max-height:calc(100vh - 36px);overflow:auto;background:#fff;border:2px solid var(--c3k-v8-accent);border-radius:14px;box-shadow:0 18px 55px rgba(0,0,0,.42);color:#202020}
@@ -34,16 +37,16 @@
 .c3k-v8-admin-list{display:grid;gap:8px}.c3k-v8-admin-item{border:1px solid #e1ded6;border-radius:9px;padding:9px}.c3k-v8-admin-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px;font-size:9px;color:#777}.c3k-v8-admin-item p{margin:0 0 7px;font-size:11px;line-height:1.4}.c3k-v8-admin-item select{font-size:10px;border:1px solid #ddd;border-radius:7px;padding:5px 6px}.c3k-v8-admin-user{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:1px solid #e1ded6;border-radius:9px;padding:8px}.c3k-v8-admin-user small{display:block;color:#777;font-size:9px}.c3k-v8-admin-user select{font-size:10px;border:1px solid #ddd;border-radius:7px;padding:5px}
 .c3k-v8-sync-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 7px;border-radius:999px;background:#f4f1e8;color:#6b6046;font-size:9px;font-weight:700}
 body.compact-density{--c3k-top-tools-width:232px}
-body.compact-density .c3k-v8-account-shell{left:7px;top:51px}
+body.compact-density .c3k-v8-account-shell{left:7px;top:59px}
 body.ultra-compact-density{--c3k-top-tools-width:218px}
-body.ultra-compact-density .c3k-v8-account-shell{left:6px;top:46px}
+body.ultra-compact-density .c3k-v8-account-shell{left:6px;top:54px}
 @media(max-width:920px){
   :root{--c3k-top-tools-width:218px}
 }
 @media(max-width:680px){
   .universal-search-shell,.c3k-v8-account-shell{width:calc(100% - 14px)!important}
-  .c3k-v8-account-shell{position:relative;top:auto;left:auto;z-index:44;margin:-3px 7px 7px;padding:5px}
+  .c3k-v8-account-shell{position:relative;top:auto;left:auto;z-index:44;margin:7px 7px 8px;padding:6px}
   .c3k-v8-panel-backdrop{place-items:center;padding:10px}
   .c3k-v8-panel{width:min(420px,100%);max-height:calc(100vh - 20px)}
 }
-@media(max-width:430px){.c3k-v8-account-actions{grid-template-columns:1fr 1fr}.c3k-v8-account-btn,.c3k-v8-signup-shortcut{font-size:8px}.c3k-v8-presence{display:flex}.c3k-v8-panel{border-radius:11px}}
+@media(max-width:430px){.c3k-v8-account-actions{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.c3k-v8-account-actions.has-notify{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 30px}.c3k-v8-account-btn,.c3k-v8-signup-shortcut{font-size:8px}.c3k-v8-notify-btn{width:30px!important}.c3k-v8-presence{display:flex}.c3k-v8-account-shell::after{right:-28px}.c3k-v8-panel{border-radius:11px}}

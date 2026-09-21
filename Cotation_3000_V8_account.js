@@ -3,6 +3,7 @@
   'use strict';
   const SUPABASE_URL='https://mhnujvgzoozimtbrasuh.supabase.co';
   const SUPABASE_KEY='sb_publishable_qHIOczDD3MZoa25VO1HVAg_JOhuDUGD';
+  const PRODUCTION_URL='https://cotation3000.netlify.app';
   const FAVORITES_KEY='cotation3000.favorites.v1';
   const FAVORITES_ORDER_KEY='cotation3000.favorites.order.v1';
   const SYNC_KEYS=[
@@ -30,6 +31,10 @@
         <div class="c3k-v8-account-actions">
           <button class="c3k-v8-account-btn" id="c3kV8AccountBtn" type="button"><span aria-hidden="true">👤</span><span id="c3kV8AccountLabel">Se connecter</span><span class="c3k-v8-account-badge" id="c3kV8RoleBadge" hidden></span></button>
           <button class="c3k-v8-signup-shortcut" id="c3kV8SignupShortcut" type="button">Créer un compte</button>
+          <button class="c3k-v8-notify-btn" id="c3kV8NotifyBtn" type="button" hidden aria-label="Notifications administrateur" title="Aucun signalement non traité">
+            <span class="c3k-v8-bell" aria-hidden="true">🔔</span>
+            <span class="c3k-v8-notify-dot" id="c3kV8NotifyDot" hidden></span>
+          </button>
         </div>
         <div class="c3k-v8-presence" title="Utilisateurs présents sur Cotation 3000"><span class="c3k-v8-dot"></span><span id="c3kV8OnlineCount" data-c3k-online-count>1 connecté</span></div>
       </div>`;
@@ -59,6 +64,7 @@
     `);
     qs('#c3kV8AccountBtn').addEventListener('click',()=>openAccount('login'));
     qs('#c3kV8SignupShortcut').addEventListener('click',async()=>{if(session?.user){await client.auth.signOut();closeAccount();}else openAccount('signup')});
+    qs('#c3kV8NotifyBtn')?.addEventListener('click',()=>{if(isAdmin()){openAccount();renderAdmin();}});
     qs('#c3kV8Close').addEventListener('click',closeAccount);
     qs('#c3kV8AccountBackdrop').addEventListener('pointerdown',e=>{if(e.target.id==='c3kV8AccountBackdrop')closeAccount()});
     document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAccount();qs('#c3kV8ReportPop').hidden=true}});
@@ -126,10 +132,10 @@
     e.preventDefault(); const fd=new FormData(e.currentTarget), status=qs('#c3kV8AuthStatus');
     const first_name=String(fd.get('first_name')||'').trim(), username=String(fd.get('username')||'').trim(), email=String(fd.get('email')||'').trim(), password=String(fd.get('password')||'');
     toast(status,'Création du compte…');
-    const {data,error}=await client.auth.signUp({email,password,options:{emailRedirectTo:window.location.origin,data:{first_name,username}}});
+    const {data,error}=await client.auth.signUp({email,password,options:{emailRedirectTo:PRODUCTION_URL,data:{first_name,username}}});
     if(error){toast(status,error.message,'error');return}
     if(data.session){toast(status,'Compte créé et connecté.','ok');}
-    else toast(status,'Compte créé. Vérifie ton e-mail si Supabase demande une confirmation.','ok');
+    else toast(status,'Confirme la création de ton compte en cliquant sur le lien reçu par e-mail.','ok');
   }
   async function login(e){
     e.preventDefault();const fd=new FormData(e.currentTarget),status=qs('#c3kV8AuthStatus');toast(status,'Connexion…');
@@ -137,11 +143,28 @@
     if(error)toast(status,error.message,'error');
   }
 
+  async function refreshAdminNotifications(){
+    const btn=qs('#c3kV8NotifyBtn'),dot=qs('#c3kV8NotifyDot');
+    if(!btn||!dot)return;
+    if(!session?.user||!profile||!isAdmin()){
+      btn.hidden=true;dot.hidden=true;btn.parentElement?.classList.remove('has-notify');btn.title='Notifications administrateur';return;
+    }
+    const {count,error}=await client.from('reports').select('id',{count:'exact',head:true}).in('status',['new','in_progress']);
+    if(error){btn.hidden=false;dot.hidden=true;btn.parentElement?.classList.add('has-notify');btn.title='Notifications administrateur';return;}
+    const pending=Number(count||0);
+    btn.hidden=false;
+    btn.parentElement?.classList.add('has-notify');
+    dot.hidden=pending===0;
+    btn.title=pending?`${pending} signalement${pending>1?'s':''} non traité${pending>1?'s':''}`:'Aucun signalement non traité';
+    btn.setAttribute('aria-label',btn.title);
+  }
+
   async function loadProfile(){
-    profile=null; if(!session?.user)return;
+    profile=null; if(!session?.user){await refreshAdminNotifications();return;}
     const {data,error}=await client.from('profiles').select('id,first_name,username,email,role,last_seen_at').eq('id',session.user.id).maybeSingle();
     if(!error) profile=data;
     updateAccountHeader();
+    await refreshAdminNotifications();
   }
   function updateAccountHeader(){
     const label=qs('#c3kV8AccountLabel'),badge=qs('#c3kV8RoleBadge'),signup=qs('#c3kV8SignupShortcut');
@@ -202,10 +225,12 @@
     if(!session?.user){toast(st,'Connecte-toi pour envoyer ce signalement.','error');return}
     if(!msg){toast(st,'Écris simplement une courte information.','error');return}
     const activeModal=[...document.querySelectorAll('[role="dialog"]')].find(x=>!x.hidden&&x.offsetParent!==null);
-    const context={version:'V8.0.4 DEV',page:location.pathname||'local',search:qs('#universalSearchInput')?.value||'',active_dialog:activeModal?.getAttribute('aria-label')||activeModal?.querySelector('h2,strong')?.textContent?.trim()||'',report_label:reportLabel(reportType),user_agent:navigator.userAgent};
+    const context={version:'V8.0.6 DEV',page:location.pathname||'local',search:qs('#universalSearchInput')?.value||'',active_dialog:activeModal?.getAttribute('aria-label')||activeModal?.querySelector('h2,strong')?.textContent?.trim()||'',report_label:reportLabel(reportType),user_agent:navigator.userAgent};
     const {error}=await client.from('reports').insert({user_id:session.user.id,report_type:reportType,message:msg,module:context.active_dialog||'interface',context});
     if(error){toast(st,error.message,'error');return}
-    qs('#c3kV8ReportMessage').value='';toast(st,'Signalement envoyé au registre administrateur.','ok');setTimeout(()=>{qs('#c3kV8ReportPop').hidden=true;st.hidden=true},900);
+    qs('#c3kV8ReportMessage').value='';toast(st,'Signalement envoyé au registre administrateur.','ok');
+    if(isAdmin())await refreshAdminNotifications();
+    setTimeout(()=>{qs('#c3kV8ReportPop').hidden=true;st.hidden=true},900);
   }
 
   async function renderAdmin(){
@@ -221,7 +246,7 @@
       <div id="c3kV8AdminArea"></div>
       <div class="c3k-v8-actions"><button class="c3k-v8-secondary" id="c3kV8AdminBack" type="button">Retour au profil</button></div>`;
     const area=qs('#c3kV8AdminArea',body);
-    const drawReports=()=>{area.innerHTML=`<div class="c3k-v8-admin-list">${(reports||[]).map(r=>`<article class="c3k-v8-admin-item"><div class="c3k-v8-admin-meta"><span>${esc(reportLabel(r.report_type))}</span><span>${esc(nameById.get(r.user_id)||'Utilisateur')}</span><span>${new Date(r.created_at).toLocaleString('fr-FR')}</span></div><p>${esc(r.message)}</p><div style="display:flex;gap:7px;align-items:center"><select data-report-status="${r.id}"><option value="new" ${r.status==='new'?'selected':''}>Nouveau</option><option value="in_progress" ${r.status==='in_progress'?'selected':''}>En cours</option><option value="resolved" ${r.status==='resolved'?'selected':''}>Corrigé</option><option value="rejected" ${r.status==='rejected'?'selected':''}>Refusé</option></select><span class="c3k-v8-muted">${esc(r.module||'')}</span></div></article>`).join('')||'<div class="c3k-v8-muted">Aucun signalement.</div>'}</div>`;qsa('[data-report-status]',area).forEach(sel=>sel.addEventListener('change',async()=>{const status=sel.value;await client.from('reports').update({status,resolved_at:['resolved','rejected'].includes(status)?new Date().toISOString():null}).eq('id',sel.dataset.reportStatus)}))};
+    const drawReports=()=>{area.innerHTML=`<div class="c3k-v8-admin-list">${(reports||[]).map(r=>`<article class="c3k-v8-admin-item"><div class="c3k-v8-admin-meta"><span>${esc(reportLabel(r.report_type))}</span><span>${esc(nameById.get(r.user_id)||'Utilisateur')}</span><span>${new Date(r.created_at).toLocaleString('fr-FR')}</span></div><p>${esc(r.message)}</p><div style="display:flex;gap:7px;align-items:center"><select data-report-status="${r.id}"><option value="new" ${r.status==='new'?'selected':''}>Nouveau</option><option value="in_progress" ${r.status==='in_progress'?'selected':''}>En cours</option><option value="resolved" ${r.status==='resolved'?'selected':''}>Corrigé</option><option value="rejected" ${r.status==='rejected'?'selected':''}>Refusé</option></select><span class="c3k-v8-muted">${esc(r.module||'')}</span></div></article>`).join('')||'<div class="c3k-v8-muted">Aucun signalement.</div>'}</div>`;qsa('[data-report-status]',area).forEach(sel=>sel.addEventListener('change',async()=>{const status=sel.value;const {error}=await client.from('reports').update({status,resolved_at:['resolved','rejected'].includes(status)?new Date().toISOString():null}).eq('id',sel.dataset.reportStatus);if(error){alert(error.message);return}const row=(reports||[]).find(r=>String(r.id)===String(sel.dataset.reportStatus));if(row)row.status=status;await refreshAdminNotifications()}))};
     const drawUsers=()=>{area.innerHTML=`<div class="c3k-v8-admin-list">${(users||[]).map(u=>`<div class="c3k-v8-admin-user"><div><strong>${esc(u.username||u.first_name||'Compte')}</strong><small>${esc(u.first_name||'')} · ${esc(u.email||'')}</small></div>${u.id===session.user.id?`<span class="c3k-v8-role">${esc(roleLabel(u.role))}</span>`:`<select data-user-role="${u.id}">${['user','contributor','editor','admin','superadmin'].map(r=>`<option value="${r}" ${u.role===r?'selected':''}>${roleLabel(r)}</option>`).join('')}</select>`}</div>`).join('')}</div>`;qsa('[data-user-role]',area).forEach(sel=>sel.addEventListener('change',async()=>{const {error}=await client.from('profiles').update({role:sel.value}).eq('id',sel.dataset.userRole);if(error)alert(error.message)}))};
     drawReports();
     qsa('[data-admin-tab]',body).forEach(btn=>btn.addEventListener('click',()=>{qsa('[data-admin-tab]',body).forEach(x=>x.classList.toggle('is-active',x===btn));btn.dataset.adminTab==='users'?drawUsers():drawReports()}));
@@ -251,6 +276,7 @@
     const {data}=await client.auth.getSession();await handleSession(data.session||null);
     client.auth.onAuthStateChange((_event,next)=>{setTimeout(()=>handleSession(next).catch(()=>{}),0)});
     setInterval(touchPresence,60000);
+    setInterval(()=>{if(isAdmin())refreshAdminNotifications().catch(()=>{})},30000);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
