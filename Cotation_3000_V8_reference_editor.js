@@ -1,4 +1,4 @@
-/* Cotation 3000 V8.0.33 — couche d'édition de tous les référentiels + communes */
+/* Cotation 3000 V8.0.35 — couche d'édition de tous les référentiels + communes */
 (() => {
   'use strict';
   const REF_TABLE='reference_overrides';
@@ -88,7 +88,11 @@
       if(!definitions[ref]?.collections?.[col]||!key)return;
       const host=card.tagName==='TR'?(card.lastElementChild||card):card;
       card.classList.add('c3k-ref-editable');host.classList.add('c3k-ref-edit-host');
-      card.classList.toggle('c3k-ref-overridden',overrides.has(mapKey(ref,col,key)));host.classList.toggle('c3k-ref-overridden-host',overrides.has(mapKey(ref,col,key)));
+      const isOverridden=overrides.has(mapKey(ref,col,key));
+      // Sur une ligne de tableau, ne jamais poser le badge BDD sur le <tr> :
+      // certains navigateurs peuvent créer une boîte de cellule anonyme et décaler les colonnes.
+      card.classList.toggle('c3k-ref-overridden',isOverridden&&card.tagName!=='TR');
+      host.classList.toggle('c3k-ref-overridden-host',isOverridden);
       const direct=[...host.children].filter(node=>node.classList?.contains('c3k-ref-edit-btn'));
       let btn=direct[0]||null;
       direct.slice(1).forEach(extra=>extra.remove());
@@ -251,7 +255,7 @@
     }
     if(k==='callDate')return `<label class="c3k-ref-editor-field"><span>${esc(label)}</span><input type="date" name="${esc(k)}" value="${esc(v??'')}" autocomplete="off" data-1p-ignore="true" data-lpignore="true"></label>`;
     if(k==='imo')return `<label class="c3k-ref-editor-field"><span>${esc(label)}</span><input name="${esc(k)}" inputmode="numeric" pattern="[0-9]*" value="${esc(v??'')}" autocomplete="off" data-1p-ignore="true" data-lpignore="true"></label>`;
-    if(k==='flagCode'){const opts=countryRows().map(x=>`<option value="${esc(x.code)}"${String(x.code)===String(v)?' selected':''}>${esc(x.flag)} ${esc(x.name)}</option>`).join('');return `<label class="c3k-ref-editor-field"><span>${esc(label)}</span><select name="flagCode" autocomplete="off"><option value="">— Choisir un pavillon —</option>${opts}</select></label>`;}
+    if(k==='flagCode'){const opts=countryRows().map(x=>`<option value="${esc(x.code)}"${String(x.code)===String(v)?' selected':''}>${esc(x.name)} (${esc(x.code)})</option>`).join('');const current=window.C3K_COUNTRY_FLAGS?.get?.(v);const src=window.C3K_COUNTRY_FLAGS?.imageUrl?.(v,40)||'';return `<label class="c3k-ref-editor-field c3k-flag-field"><span>${esc(label)}</span><div class="c3k-flag-select-wrap"><span class="c3k-flag-preview" id="c3kFlagPreview">${src?`<img src="${esc(src)}" alt="Drapeau ${esc(current?.name||v)}">`:'—'}</span><select name="flagCode" id="c3kFlagSelect" autocomplete="off"><option value="">— Choisir un pavillon —</option>${opts}</select></div></label>`;}
     if(k==='lengthOverallM')return `<label class="c3k-ref-editor-field"><span>${esc(label)}</span><input type="number" min="0" step="0.1" name="${esc(k)}" value="${esc(v??'')}" autocomplete="off"></label>`;
     if(k==='builtYear')return `<label class="c3k-ref-editor-field"><span>${esc(label)}</span><input type="number" min="1800" max="2100" step="1" name="${esc(k)}" value="${esc(v??'')}" autocomplete="off"></label>`;
     if(k==='trackerSite'){const val=String(v||'vesselfinder');return `<label class="c3k-ref-editor-field"><span>${esc(label)}</span><select name="trackerSite" autocomplete="off"><option value="vesselfinder"${val==='vesselfinder'?' selected':''}>VesselFinder</option><option value="marinetraffic"${val==='marinetraffic'?' selected':''}>MarineTraffic</option></select></label>`;}
@@ -329,6 +333,7 @@
     const del=document.getElementById('c3kReferenceEditorDelete'),reset=document.getElementById('c3kReferenceEditorReset');del.hidden=!isSuper()||isNew||colDef.allowDelete===false;reset.hidden=!isSuper()||isNew||!stored;
     del.onclick=()=>deleteEntry(ref,col,key);reset.onclick=()=>resetEntry(ref,col,key);const saveBtn=document.getElementById('c3kReferenceEditorSave');saveBtn.onclick=()=>saveForm(form);document.getElementById('c3kReferenceEditorStatus').hidden=true;document.getElementById('c3kReferenceEditorBackdrop').hidden=false;
     document.getElementById('c3kRefMediaFile')?.addEventListener('change',e=>{const f=e.target.files?.[0];if(f){const url=URL.createObjectURL(f);document.getElementById('c3kRefMediaPreview').innerHTML=`<img src="${esc(url)}" alt="Aperçu">`;}});
+    document.getElementById('c3kFlagSelect')?.addEventListener('change',e=>{const code=String(e.target.value||'');const c=window.C3K_COUNTRY_FLAGS?.get?.(code);const src=window.C3K_COUNTRY_FLAGS?.imageUrl?.(code,40)||'';const preview=document.getElementById('c3kFlagPreview');if(preview)preview.innerHTML=src?`<img src="${esc(src)}" alt="Drapeau ${esc(c?.name||code)}">`:'—';});
   }
   function parseForm(form,template){
     const out={};for(const [k,v] of Object.entries(template)){if(isHiddenField(k)){out[k]=v;continue;}const field=form.querySelector(`[name="${CSS.escape(k)}"]`);if(!field){out[k]=v;continue;}const raw=field.value;if(typeof v==='number')out[k]=raw===''?0:Number(raw);else if(typeof v==='boolean')out[k]=raw==='true';else if(Array.isArray(v)||v&&typeof v==='object'){try{out[k]=JSON.parse(String(raw||'null'))}catch{throw new Error(`JSON invalide dans ${labels[k]||k}`)}}else out[k]=String(raw);}

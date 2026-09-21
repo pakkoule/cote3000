@@ -38,20 +38,23 @@
 
 
 
-/* V8.0.33 — fiches navires enrichies : photo, pavillon et suivi AIS. */
+/* V8.0.34 — fiches navires enrichies : photo, pavillon et suivi AIS. */
 .maritime-ref-vessel{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,34%);gap:14px;align-items:stretch;padding-right:52px}
 .maritime-ref-vessel-content{min-width:0}
 .maritime-ref-vessel-photo{min-height:150px;border:3px solid #85754e;background:linear-gradient(145deg,#f7f4ec,#ece6d8);display:grid;place-items:center;overflow:hidden;align-self:center;box-shadow:inset 0 0 0 2px #fff,0 2px 7px rgba(80,64,30,.12)}
 .maritime-ref-vessel-photo img{width:100%;height:100%;min-height:150px;max-height:220px;object-fit:cover;display:block}
 .maritime-ref-vessel-photo-placeholder{display:grid;place-items:center;width:100%;height:100%;min-height:150px;color:#9a8b69;font-size:9px;font-weight:900;letter-spacing:.12em;background:repeating-linear-gradient(135deg,#faf8f3 0 12px,#f2ede2 12px 24px)}
 .maritime-ref-vessel-photo-placeholder[hidden]{display:none!important}
-.maritime-ref-flag{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:3px 7px;background:#f5f0e6;color:#63573d;font-size:7.5px;font-weight:850;white-space:nowrap}.maritime-ref-flag>span{font-size:11px;line-height:1}
+.maritime-ref-flag{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:3px 7px;background:#f5f0e6;color:#63573d;font-size:7.5px;font-weight:850;white-space:nowrap}.maritime-ref-flag img{width:22px;height:16px;object-fit:cover;border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.10)}
 .maritime-ref-tracker{display:inline-flex;align-items:center;gap:5px;border:1px solid #cdbf9e;border-radius:7px;background:#faf8f2;color:#62553a;padding:5px 7px;font-size:8px;font-weight:800;text-decoration:none;cursor:pointer}.maritime-ref-tracker:hover{background:#85754e;color:#fff;border-color:#85754e}.maritime-ref-tracker.is-disabled{opacity:.62;cursor:default;background:#f5f2eb;color:#877c66}.maritime-ref-tracker.is-disabled:hover{background:#f5f2eb;color:#877c66;border-color:#cdbf9e}.maritime-ref-tracker img{width:14px;height:14px;border-radius:3px}
 .maritime-ref-vessel.is-trackable{cursor:pointer}.maritime-ref-vessel.is-trackable:hover{border-color:#a38d58;box-shadow:0 6px 18px rgba(44,36,20,.12)}.maritime-ref-vessel.is-trackable:focus-visible{outline:2px solid rgba(133,117,78,.42);outline-offset:2px}
 .maritime-ref-vessel.c3k-ref-editable>.c3k-ref-edit-btn{right:11px!important;top:50%!important}
 @media(max-width:760px){.maritime-ref-vessel{grid-template-columns:1fr;padding-right:48px}.maritime-ref-vessel-photo{min-height:120px}.maritime-ref-vessel-photo img,.maritime-ref-vessel-photo-placeholder{min-height:120px;max-height:180px}}
 
-/* V8.0.33 — crédit discret des photos préremplies Wikimedia Commons. */
+/* V8.0.34 — crédit discret des photos préremplies Wikimedia Commons. */
 .maritime-ref-vessel-photo{position:relative}
 .maritime-ref-photo-credit{position:absolute;left:6px;bottom:6px;z-index:2;max-width:calc(100% - 12px);padding:3px 6px;border-radius:6px;background:rgba(20,20,20,.72);color:#fff!important;text-decoration:none;font:700 7px/1.2 "Poppins",Arial,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;backdrop-filter:blur(2px)}
 .maritime-ref-photo-credit:hover{background:rgba(133,117,78,.92)}
+
+.maritime-ref-flag-inline{display:inline-flex;align-items:center;gap:5px}
+.maritime-ref-flag-inline img{width:22px;height:16px;object-fit:cover;border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.10)}

@@ -6,11 +6,11 @@
 .c3k-ref-add-btn:hover{filter:brightness(.94)}
 .c3k-ref-editor-backdrop{position:fixed;inset:0;z-index:250000;background:rgba(0,0,0,.62);display:grid;place-items:center;padding:18px}
 .c3k-ref-editor-backdrop[hidden]{display:none!important}
-.c3k-ref-editor{width:min(760px,calc(100vw - 28px));max-height:calc(100dvh - 36px);display:flex;flex-direction:column;overflow:hidden;background:#fff;border:2px solid #85754e;border-radius:14px;box-shadow:0 22px 70px rgba(0,0,0,.45);color:#24221e;font-family:"Poppins",Arial,sans-serif}
+.c3k-ref-editor{width:min(760px,calc(100vw - 28px));height:min(900px,calc(100dvh - 36px));max-height:calc(100dvh - 36px);display:flex;flex-direction:column;overflow:hidden;background:#fff;border:2px solid #85754e;border-radius:14px;box-shadow:0 22px 70px rgba(0,0,0,.45);color:#24221e;font-family:"Poppins",Arial,sans-serif}
 .c3k-ref-editor-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #d8ccb0;background:#fff}
 .c3k-ref-editor-head>div:first-child{min-width:0;flex:1}.c3k-ref-editor-head h3{margin:0;color:#4f442d;font-size:14px}.c3k-ref-editor-head small{display:block;margin-top:2px;color:#85754e;font-size:9px;font-weight:700}
 .c3k-ref-editor-close{border:0;background:transparent;color:#6c6046;font-size:22px;cursor:pointer}
-.c3k-ref-editor form{display:flex;flex:1 1 auto;min-height:0;flex-direction:column;overflow:hidden}
+.c3k-ref-editor #c3kReferenceEditorForm{display:flex;flex:1 1 auto;min-height:0;flex-direction:column;overflow:hidden}
 .c3k-ref-editor-body{flex:1 1 auto;min-height:0;overflow:auto;padding:14px}
 .c3k-ref-editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .c3k-ref-editor-field{display:grid;gap:4px;min-width:0}.c3k-ref-editor-field.is-wide{grid-column:1/-1}.c3k-ref-editor-field>span{font-size:9px;font-weight:800;color:#62583f;text-transform:none}
@@ -18,10 +18,10 @@
 .c3k-ref-editor-field textarea{min-height:76px;resize:vertical}.c3k-ref-editor-field input:focus,.c3k-ref-editor-field textarea:focus{outline:2px solid rgba(133,117,78,.2);border-color:#85754e}.c3k-ref-editor-field input:disabled{background:#f4f2ed;color:#888;cursor:not-allowed}
 .c3k-ref-editor-hint{margin:0 0 12px;padding:8px 10px;border:1px solid #e3dbc7;border-radius:8px;background:#faf8f2;color:#6d6249;font-size:9px;line-height:1.45}
 .c3k-ref-media-box{grid-column:1/-1;display:grid;grid-template-columns:72px 1fr;gap:10px;align-items:center;padding:9px;border:1px solid #d8ccb0;border-radius:9px;background:#fbfaf6}.c3k-ref-media-preview{width:64px;height:64px;display:grid;place-items:center;border:2px solid #85754e;border-radius:10px;background:#fff;overflow:hidden;color:#85754e;font-size:9px;font-weight:900}.c3k-ref-media-preview img{max-width:90%;max-height:90%;object-fit:contain}.c3k-ref-media-copy{display:grid;gap:6px}.c3k-ref-media-copy strong{font-size:10px;color:#4f442d}.c3k-ref-media-copy input[type=file]{font-size:10px}
-.c3k-ref-editor-actions{flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:11px 14px;border-top:1px solid #e4dfd4;background:#fbfaf7;box-shadow:0 -4px 14px rgba(0,0,0,.05);position:relative;z-index:3}.c3k-ref-editor-actions .spacer{flex:1}.c3k-ref-editor-actions button{border-radius:8px;padding:7px 10px;font:800 10px "Poppins",Arial,sans-serif;cursor:pointer}.c3k-ref-save{border:1px solid #85754e;background:#85754e;color:#fff}.c3k-ref-cancel{border:1px solid #d5d0c6;background:#fff;color:#333}.c3k-ref-delete{border:1px solid #d5a5a5;background:#fff;color:#a92525}.c3k-ref-reset{border:1px solid #d8ccb0;background:#fff;color:#65583b}
+.c3k-ref-editor-actions{flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:11px 14px;border-top:1px solid #e4dfd4;background:#fbfaf7;box-shadow:0 -4px 14px rgba(0,0,0,.05);position:sticky;bottom:0;z-index:30}.c3k-ref-editor-actions .spacer{flex:1}.c3k-ref-editor-actions button{border-radius:8px;padding:7px 10px;font:800 10px "Poppins",Arial,sans-serif;cursor:pointer}.c3k-ref-save{border:1px solid #85754e;background:#85754e;color:#fff}.c3k-ref-cancel{border:1px solid #d5d0c6;background:#fff;color:#333}.c3k-ref-delete{border:1px solid #d5a5a5;background:#fff;color:#a92525}.c3k-ref-reset{border:1px solid #d8ccb0;background:#fff;color:#65583b}
 .c3k-ref-editor-status{margin:0 14px 10px;padding:7px 9px;border-radius:8px;background:#f4f1e8;color:#5f563f;font-size:9px}.c3k-ref-editor-status.is-error{background:#fff0f0;color:#902525}.c3k-ref-editor-status.is-ok{background:#eef8f1;color:#246739}
 .c3k-ref-overridden::before{content:"BDD";position:absolute;right:7px;top:7px;z-index:7;padding:2px 5px;border-radius:999px;background:#85754e;color:#fff;font:800 7px "Poppins",Arial,sans-serif;letter-spacing:.03em}
-@media(max-width:620px){.c3k-ref-editor-backdrop{padding:6px}.c3k-ref-editor{width:100%;max-height:calc(100dvh - 12px)}.c3k-ref-editor-grid{grid-template-columns:1fr}.c3k-ref-editor-field.is-wide,.c3k-ref-media-box{grid-column:1}.c3k-ref-add-btn{padding:6px 8px;font-size:9px}}
+@media(max-width:620px){.c3k-ref-editor-backdrop{padding:6px}.c3k-ref-editor{width:100%;height:calc(100dvh - 12px);max-height:calc(100dvh - 12px)}.c3k-ref-editor-grid{grid-template-columns:1fr}.c3k-ref-editor-field.is-wide,.c3k-ref-media-box{grid-column:1}.c3k-ref-add-btn{padding:6px 8px;font-size:9px}}
 
 @media(max-width:620px){.c3k-ref-editor-actions{flex-wrap:wrap}.c3k-ref-editor-actions .spacer{display:none}.c3k-ref-editor-actions button{flex:1 1 auto;min-height:38px}.c3k-ref-save{order:1;flex-basis:100%!important}.c3k-ref-cancel{order:2}.c3k-ref-delete,.c3k-ref-reset{order:3}}
 
@@ -134,3 +134,22 @@ body:has(#c3kReferenceEditorBackdrop:not([hidden])) .c3k-ref-editor-backdrop{iso
 .c3k-ref-add-chooser{width:min(520px,calc(100vw - 28px));max-height:calc(100dvh - 36px);overflow:hidden;background:#fff;border:2px solid #85754e;border-radius:14px;box-shadow:0 22px 70px rgba(0,0,0,.45);font-family:"Poppins",Arial,sans-serif;color:#342e22}.c3k-ref-add-chooser header{display:flex;align-items:center;gap:10px;padding:13px 14px;border-bottom:1px solid #ded4bd}.c3k-ref-add-chooser header>div{flex:1;min-width:0}.c3k-ref-add-chooser header strong{display:block;color:#4f442d;font-size:13px}.c3k-ref-add-chooser header small{display:block;margin-top:2px;color:#8a7c5d;font-size:8px}.c3k-ref-add-chooser header button{width:31px;height:31px;border:1px solid #d5c8aa;border-radius:8px;background:#fff;color:#5b4e34;font-size:18px;font-weight:900;cursor:pointer}.c3k-ref-add-chooser-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding:14px;overflow:auto;max-height:60vh}.c3k-ref-add-chooser-grid button{min-height:72px;border:1px solid #d8ccb0;border-radius:10px;background:#fbfaf6;color:#54492f;display:flex;align-items:center;gap:10px;padding:11px;text-align:left;cursor:pointer}.c3k-ref-add-chooser-grid button:hover{border-color:#85754e;background:#f4efe4}.c3k-ref-add-chooser-grid button span{width:31px;height:31px;border-radius:8px;display:grid;place-items:center;background:#85754e;color:#fff;font-size:15px}.c3k-ref-add-chooser-grid button strong{font-size:10px;line-height:1.3}
 .c3k-ref-media-preview.is-vessel-photo{width:110px;height:74px;border-radius:8px}.c3k-ref-media-preview.is-vessel-photo img{max-width:100%;max-height:100%;width:100%;height:100%;object-fit:cover}.c3k-ref-media-box:has(.is-vessel-photo){grid-template-columns:118px 1fr}
 @media(max-width:520px){.c3k-ref-add-chooser-grid{grid-template-columns:1fr}.c3k-ref-media-box:has(.is-vessel-photo){grid-template-columns:1fr}.c3k-ref-media-preview.is-vessel-photo{width:100%;height:120px}}
+
+
+/* V8.0.35 — footer toujours visible + vrai drapeau graphique dans l’éditeur. */
+.c3k-flag-field{grid-column:1/-1}
+.c3k-flag-select-wrap{display:grid;grid-template-columns:52px minmax(0,1fr);gap:8px;align-items:center}
+.c3k-flag-preview{width:52px;height:38px;display:grid;place-items:center;border:1px solid #d7cfbc;border-radius:8px;background:#faf8f2;color:#9b9079;font-size:9px;font-weight:800;overflow:hidden}
+.c3k-flag-preview img{display:block;width:40px;height:30px;object-fit:cover;box-shadow:0 0 0 1px rgba(0,0,0,.10)}
+@media(max-width:620px){.c3k-flag-select-wrap{grid-template-columns:46px minmax(0,1fr)}.c3k-flag-preview{width:46px;height:34px}.c3k-flag-preview img{width:36px;height:27px}}
+
+
+/* V8.0.35 — une ligne <tr> ne reçoit jamais de pseudo-cellule BDD. */
+#dataTable tr.c3k-ref-overridden::before,
+table tr.c3k-ref-overridden::before{content:none!important;display:none!important}
+#dataTable td.c3k-ref-overridden-host::before{
+  right:39px!important;top:50%!important;transform:translateY(-50%)!important;
+  padding:2px 4px!important;font-size:6.5px!important;line-height:1!important;
+}
+#dataTable td.c3k-ref-edit-host{padding-right:78px!important}
+#dataTable td.c3k-ref-edit-host>.c3k-ref-edit-btn{right:7px!important}

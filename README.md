@@ -1,8 +1,8 @@
-# Cotation 3000 V8.0.33 DEV
+# Cotation 3000 V8.0.35 DEV
 
 Version de développement splittée de Cotation 3000, prête pour GitHub + Netlify.
 
-## V8.0.33 — correctif boutons Ajouter des gros référentiels
+## V8.0.35 — correctif boutons Ajouter des gros référentiels
 - Ports mondiaux SMDG, Compagnies maritimes et Douane : le bouton `+ Ajouter` dispose maintenant de sa propre largeur et ne chevauche plus la croix de fermeture.
 - Le titre reste flexible et les deux actions restent séparées.
 - Sur petit écran, `+ Ajouter` devient un bouton compact `+`.
@@ -20,7 +20,7 @@ Version de développement splittée de Cotation 3000, prête pour GitHub + Netli
 - `adr-icons/` — pictogrammes ADR
 - `netlify.toml` — publication statique depuis la racine
 
-## V8.0.33 DEV — édition fiabilisée + base des villes
+## V8.0.35 DEV — édition fiabilisée + base des villes
 - Fenêtre d’édition portée au-dessus de tous les référentiels ouverts.
 - Boutons **✏ Modifier** fiabilisés via gestion déléguée des clics.
 - Les boutons d’édition n’élargissent plus les tableaux : retour à la ligne forcé et largeur des tableaux contenue dans la fenêtre.
@@ -70,25 +70,25 @@ Les ADMIN peuvent modifier les entrées existantes. Les SUPERADMIN peuvent en pl
 ## Déploiement Netlify
 Aucune commande de build. Publier la racine (`.`).
 
-### V8.0.33 — correctif boutons Modifier base des villes
+### V8.0.35 — correctif boutons Modifier base des villes
 - Correction structurelle de la duplication récursive des boutons `Modifier` dans le tableau des communes.
 - Les boutons d'action utilisent désormais des attributs dédiés (`data-c3k-edit-*`) et ne peuvent plus être rescannés comme des fiches éditables.
 - Nettoyage automatique des anciens boutons imbriqués éventuellement déjà présents dans le DOM.
 - Un seul bouton `Modifier` est conservé par ligne, y compris après recherche, filtre, pagination ou rafraîchissement des référentiels.
 
 
-## V8.0.33 — synchro des communes ajoutées
+## V8.0.35 — synchro des communes ajoutées
 - Corrige l’injection des nouvelles communes Supabase dans la table principale.
 - Les lignes historiques sont désormais reconnues par leur clé stable `base-<index>` lors des synchronisations.
 - Reconstruction immédiate des index de recherche/filtres/pagination après ajout ou modification.
 - Après ajout, la nouvelle commune est automatiquement recherchée et affichée dans le tableau.
 
 
-## V8.0.33 DEV
+## V8.0.35 DEV
 - Header : les vagues sont abaissées et masquées sous le bloc de connexion, puis réapparaissent sous sa base pour une intégration plus propre.
 
 
-## V8.0.33 — fiches navires enrichies
+## V8.0.35 — fiches navires enrichies
 - Cadre photo navire avec upload Supabase.
 - IMO modifiable grâce à une clé interne stable.
 - Base ISO 3166-1 de 249 pavillons avec drapeaux.
