@@ -1,4 +1,4 @@
-# Cotation 3000 V8.0.3 DEV
+# Cotation 3000 V8.0.4 DEV
 
 Version de développement splittée de Cotation 3000.
 
@@ -23,14 +23,11 @@ Supabase — projet Cotation 3000 V8.
 
 > DEV : le dataset communes n'est plus visible via Ctrl+U mais reste téléchargeable comme ressource statique. La migration complète de la base métier vers Supabase sera la prochaine étape pour une protection serveur réelle.
 
-## V8.0.3 DEV
-- bloc compte en blanc/doré ;
-- boutons Se connecter / Créer un compte sur une même ligne ;
-- nombre de connectés sur une seconde ligne ;
-- fenêtre Compte Cotation 3000 centrée dans la fenêtre.
-
-## V8.0.3 DEV
-- Alignement strict du bloc compte avec la recherche universelle.
-- Largeur extérieure commune sur desktop, modes compact/ultra-compact et mobile.
-- Boutons Connexion / Création de compte en colonnes 50/50 parfaitement symétriques.
-- Ligne du nombre de connectés sur toute la largeur intérieure.
+## V8.0.4 DEV
+- bloc compte aligné avec la recherche universelle ;
+- connecté : le bouton `Créer un compte` devient `Se déconnecter` ;
+- déconnecté : retour automatique au bouton `Créer un compte` ;
+- signalement rapide avec 4 catégories : Bug, Suggestion, Manque dans la base, Correction de référentiel ;
+- placeholder adapté automatiquement au type de signalement ;
+- contexte de recherche et module actif joints automatiquement au signalement ;
+- registre administrateur avec libellés de catégories lisibles en français.

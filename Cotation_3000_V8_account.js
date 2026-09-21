@@ -16,6 +16,8 @@
   const nativeRemoveItem=Storage.prototype.removeItem;
   const esc=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const roleLabel=r=>({user:'USER',contributor:'CONTRIBUTOR',editor:'EDITOR',admin:'ADMIN',superadmin:'SUPERADMIN'}[r]||String(r||'USER').toUpperCase());
+  const reportLabel=t=>({bug:'🐞 Bug',suggestion:'💡 Suggestion',missing_data:'📚 Manque dans la base',data_correction:'✏ Correction de référentiel'}[t]||String(t||'Signalement'));
+  const reportPlaceholder=t=>({bug:'Décris rapidement le bug rencontré…',suggestion:'Décris ton idée ou amélioration…',missing_data:'Indique la donnée ou l’élément manquant dans la base…',data_correction:'Indique le référentiel concerné et la correction à apporter…'}[t]||'Décris rapidement ton signalement…');
   const isAdmin=()=>['admin','superadmin'].includes(profile?.role);
   const qs=(s,p=document)=>p.querySelector(s);
   const qsa=(s,p=document)=>[...p.querySelectorAll(s)];
@@ -44,24 +46,25 @@
       <section class="c3k-v8-report-pop" id="c3kV8ReportPop" hidden aria-label="Signalement rapide">
         <div class="c3k-v8-report-kinds">
           <button type="button" class="is-active" data-report-type="bug">🐞 Bug</button>
-          <button type="button" data-report-type="missing_data">⚠ Manque BDD</button>
           <button type="button" data-report-type="suggestion">💡 Suggestion</button>
+          <button type="button" data-report-type="missing_data">📚 Manque dans la base</button>
+          <button type="button" data-report-type="data_correction">✏ Correction référentiel</button>
         </div>
         <div class="c3k-v8-form">
-          <label>Une phrase suffit<textarea id="c3kV8ReportMessage" maxlength="2000" placeholder="Décris rapidement ce qui manque ou ce qui ne va pas…"></textarea></label>
+          <label>Une phrase suffit<textarea id="c3kV8ReportMessage" maxlength="2000" placeholder="Décris rapidement le bug rencontré…"></textarea></label>
         </div>
         <div class="c3k-v8-actions"><button class="c3k-v8-secondary" id="c3kV8ReportCancel" type="button">Fermer</button><button class="c3k-v8-primary" id="c3kV8ReportSend" type="button">Envoyer</button></div>
         <div class="c3k-v8-status" id="c3kV8ReportStatus" hidden></div>
       </section>
     `);
     qs('#c3kV8AccountBtn').addEventListener('click',()=>openAccount('login'));
-    qs('#c3kV8SignupShortcut').addEventListener('click',()=>openAccount('signup'));
+    qs('#c3kV8SignupShortcut').addEventListener('click',async()=>{if(session?.user){await client.auth.signOut();closeAccount();}else openAccount('signup')});
     qs('#c3kV8Close').addEventListener('click',closeAccount);
     qs('#c3kV8AccountBackdrop').addEventListener('pointerdown',e=>{if(e.target.id==='c3kV8AccountBackdrop')closeAccount()});
     document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAccount();qs('#c3kV8ReportPop').hidden=true}});
     qs('#c3kV8ReportLaunch').addEventListener('click',()=>{qs('#c3kV8ReportPop').hidden=!qs('#c3kV8ReportPop').hidden;qs('#c3kV8ReportMessage')?.focus()});
     qs('#c3kV8ReportCancel').addEventListener('click',()=>qs('#c3kV8ReportPop').hidden=true);
-    qsa('[data-report-type]').forEach(b=>b.addEventListener('click',()=>{reportType=b.dataset.reportType;qsa('[data-report-type]').forEach(x=>x.classList.toggle('is-active',x===b))}));
+    qsa('[data-report-type]').forEach(b=>b.addEventListener('click',()=>{reportType=b.dataset.reportType;qsa('[data-report-type]').forEach(x=>x.classList.toggle('is-active',x===b));const ta=qs('#c3kV8ReportMessage');if(ta)ta.placeholder=reportPlaceholder(reportType)}));
     qs('#c3kV8ReportSend').addEventListener('click',sendReport);
   }
 
@@ -145,10 +148,10 @@
     if(profile){
       label.textContent=profile.username||profile.first_name||'Mon compte';
       badge.hidden=false;badge.textContent=profile.role==='superadmin'?'SA':profile.role==='admin'?'A':'✓';
-      if(signup)signup.hidden=true;
+      if(signup){signup.hidden=false;signup.textContent='Se déconnecter';signup.setAttribute('aria-label','Se déconnecter du compte Cotation 3000')}
     } else {
       label.textContent='Se connecter';badge.hidden=true;badge.textContent='';
-      if(signup)signup.hidden=false;
+      if(signup){signup.hidden=false;signup.textContent='Créer un compte';signup.setAttribute('aria-label','Créer un compte Cotation 3000')}
     }
   }
 
@@ -199,7 +202,7 @@
     if(!session?.user){toast(st,'Connecte-toi pour envoyer ce signalement.','error');return}
     if(!msg){toast(st,'Écris simplement une courte information.','error');return}
     const activeModal=[...document.querySelectorAll('[role="dialog"]')].find(x=>!x.hidden&&x.offsetParent!==null);
-    const context={version:'V8.0.2 DEV',page:location.pathname||'local',search:qs('#universalSearchInput')?.value||'',active_dialog:activeModal?.getAttribute('aria-label')||activeModal?.querySelector('h2,strong')?.textContent?.trim()||'',user_agent:navigator.userAgent};
+    const context={version:'V8.0.4 DEV',page:location.pathname||'local',search:qs('#universalSearchInput')?.value||'',active_dialog:activeModal?.getAttribute('aria-label')||activeModal?.querySelector('h2,strong')?.textContent?.trim()||'',report_label:reportLabel(reportType),user_agent:navigator.userAgent};
     const {error}=await client.from('reports').insert({user_id:session.user.id,report_type:reportType,message:msg,module:context.active_dialog||'interface',context});
     if(error){toast(st,error.message,'error');return}
     qs('#c3kV8ReportMessage').value='';toast(st,'Signalement envoyé au registre administrateur.','ok');setTimeout(()=>{qs('#c3kV8ReportPop').hidden=true;st.hidden=true},900);
@@ -218,7 +221,7 @@
       <div id="c3kV8AdminArea"></div>
       <div class="c3k-v8-actions"><button class="c3k-v8-secondary" id="c3kV8AdminBack" type="button">Retour au profil</button></div>`;
     const area=qs('#c3kV8AdminArea',body);
-    const drawReports=()=>{area.innerHTML=`<div class="c3k-v8-admin-list">${(reports||[]).map(r=>`<article class="c3k-v8-admin-item"><div class="c3k-v8-admin-meta"><span>${esc(r.report_type)}</span><span>${esc(nameById.get(r.user_id)||'Utilisateur')}</span><span>${new Date(r.created_at).toLocaleString('fr-FR')}</span></div><p>${esc(r.message)}</p><div style="display:flex;gap:7px;align-items:center"><select data-report-status="${r.id}"><option value="new" ${r.status==='new'?'selected':''}>Nouveau</option><option value="in_progress" ${r.status==='in_progress'?'selected':''}>En cours</option><option value="resolved" ${r.status==='resolved'?'selected':''}>Corrigé</option><option value="rejected" ${r.status==='rejected'?'selected':''}>Refusé</option></select><span class="c3k-v8-muted">${esc(r.module||'')}</span></div></article>`).join('')||'<div class="c3k-v8-muted">Aucun signalement.</div>'}</div>`;qsa('[data-report-status]',area).forEach(sel=>sel.addEventListener('change',async()=>{const status=sel.value;await client.from('reports').update({status,resolved_at:['resolved','rejected'].includes(status)?new Date().toISOString():null}).eq('id',sel.dataset.reportStatus)}))};
+    const drawReports=()=>{area.innerHTML=`<div class="c3k-v8-admin-list">${(reports||[]).map(r=>`<article class="c3k-v8-admin-item"><div class="c3k-v8-admin-meta"><span>${esc(reportLabel(r.report_type))}</span><span>${esc(nameById.get(r.user_id)||'Utilisateur')}</span><span>${new Date(r.created_at).toLocaleString('fr-FR')}</span></div><p>${esc(r.message)}</p><div style="display:flex;gap:7px;align-items:center"><select data-report-status="${r.id}"><option value="new" ${r.status==='new'?'selected':''}>Nouveau</option><option value="in_progress" ${r.status==='in_progress'?'selected':''}>En cours</option><option value="resolved" ${r.status==='resolved'?'selected':''}>Corrigé</option><option value="rejected" ${r.status==='rejected'?'selected':''}>Refusé</option></select><span class="c3k-v8-muted">${esc(r.module||'')}</span></div></article>`).join('')||'<div class="c3k-v8-muted">Aucun signalement.</div>'}</div>`;qsa('[data-report-status]',area).forEach(sel=>sel.addEventListener('change',async()=>{const status=sel.value;await client.from('reports').update({status,resolved_at:['resolved','rejected'].includes(status)?new Date().toISOString():null}).eq('id',sel.dataset.reportStatus)}))};
     const drawUsers=()=>{area.innerHTML=`<div class="c3k-v8-admin-list">${(users||[]).map(u=>`<div class="c3k-v8-admin-user"><div><strong>${esc(u.username||u.first_name||'Compte')}</strong><small>${esc(u.first_name||'')} · ${esc(u.email||'')}</small></div>${u.id===session.user.id?`<span class="c3k-v8-role">${esc(roleLabel(u.role))}</span>`:`<select data-user-role="${u.id}">${['user','contributor','editor','admin','superadmin'].map(r=>`<option value="${r}" ${u.role===r?'selected':''}>${roleLabel(r)}</option>`).join('')}</select>`}</div>`).join('')}</div>`;qsa('[data-user-role]',area).forEach(sel=>sel.addEventListener('change',async()=>{const {error}=await client.from('profiles').update({role:sel.value}).eq('id',sel.dataset.userRole);if(error)alert(error.message)}))};
     drawReports();
     qsa('[data-admin-tab]',body).forEach(btn=>btn.addEventListener('click',()=>{qsa('[data-admin-tab]',body).forEach(x=>x.classList.toggle('is-active',x===btn));btn.dataset.adminTab==='users'?drawUsers():drawReports()}));
