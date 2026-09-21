@@ -1,4 +1,4 @@
-/* Cotation 3000 V8.0.35 — couche d'édition de tous les référentiels + communes */
+/* Cotation 3000 V8.0.37 — couche d'édition de tous les référentiels + communes */
 (() => {
   'use strict';
   const REF_TABLE='reference_overrides';
@@ -307,10 +307,42 @@
   }
   function ensureModal(){
     if(document.getElementById('c3kReferenceEditorBackdrop'))return;
-    document.body.insertAdjacentHTML('beforeend',`<div class="c3k-ref-editor-backdrop" id="c3kReferenceEditorBackdrop" hidden><section class="c3k-ref-editor" role="dialog" aria-modal="true" aria-labelledby="c3kReferenceEditorTitle"><header class="c3k-ref-editor-head"><div><h3 id="c3kReferenceEditorTitle">Modifier le référentiel</h3><small id="c3kReferenceEditorSub"></small></div><button class="c3k-ref-editor-close" id="c3kReferenceEditorClose" type="button" aria-label="Fermer">×</button></header><div id="c3kReferenceEditorForm" role="group" aria-label="Éditeur de référentiel" autocomplete="off" data-1p-ignore="true" data-lpignore="true" data-form-type="other"><div class="c3k-ref-editor-body"><p class="c3k-ref-editor-hint">Les modifications sont enregistrées dans Supabase et deviennent prioritaires sur le fichier source GitHub. L’historique est conservé dans le registre administrateur.</p><div class="c3k-ref-editor-grid" id="c3kReferenceEditorFields"></div></div><div class="c3k-ref-editor-status" id="c3kReferenceEditorStatus" hidden></div><footer class="c3k-ref-editor-actions"><button class="c3k-ref-delete" id="c3kReferenceEditorDelete" type="button" hidden>Supprimer</button><button class="c3k-ref-reset" id="c3kReferenceEditorReset" type="button" hidden>Revenir à la source</button><span class="spacer"></span><button class="c3k-ref-cancel" id="c3kReferenceEditorCancel" type="button">Annuler</button><button class="c3k-ref-save" id="c3kReferenceEditorSave" type="button">💾 Enregistrer les modifications</button></footer></div></section></div>`);
+    document.body.insertAdjacentHTML('beforeend',`<div class="c3k-ref-editor-backdrop" id="c3kReferenceEditorBackdrop" hidden><section class="c3k-ref-editor" role="dialog" aria-modal="true" aria-labelledby="c3kReferenceEditorTitle"><header class="c3k-ref-editor-head"><div><h3 id="c3kReferenceEditorTitle">Modifier le référentiel</h3><small id="c3kReferenceEditorSub"></small></div><button class="c3k-ref-editor-close" id="c3kReferenceEditorClose" type="button" aria-label="Fermer">×</button></header><div id="c3kReferenceEditorForm" role="group" aria-label="Éditeur de référentiel" autocomplete="off" data-1p-ignore="true" data-lpignore="true" data-form-type="other" data-bwignore="true" data-protonpass-ignore="true"><div class="c3k-ref-editor-body"><p class="c3k-ref-editor-hint">Les modifications sont enregistrées dans Supabase et deviennent prioritaires sur le fichier source GitHub. L’historique est conservé dans le registre administrateur.</p><div class="c3k-ref-editor-grid" id="c3kReferenceEditorFields"></div></div><div class="c3k-ref-editor-status" id="c3kReferenceEditorStatus" hidden></div><footer class="c3k-ref-editor-actions"><button class="c3k-ref-delete" id="c3kReferenceEditorDelete" type="button" hidden>Supprimer</button><button class="c3k-ref-reset" id="c3kReferenceEditorReset" type="button" hidden>Revenir à la source</button><span class="spacer"></span><button class="c3k-ref-cancel" id="c3kReferenceEditorCancel" type="button">Annuler</button><button class="c3k-ref-save" id="c3kReferenceEditorSave" type="button">💾 Enregistrer les modifications</button></footer></div></section></div>`);
     const close=()=>document.getElementById('c3kReferenceEditorBackdrop').hidden=true;
     document.getElementById('c3kReferenceEditorClose').onclick=close;document.getElementById('c3kReferenceEditorCancel').onclick=close;document.getElementById('c3kReferenceEditorBackdrop').addEventListener('pointerdown',e=>{if(e.target.id==='c3kReferenceEditorBackdrop')close();});
     document.getElementById('c3kReferenceEditorForm').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target?.tagName!=='TEXTAREA'){e.preventDefault();}});
+  }
+  function hardenEditorAgainstPasswordManagers(root=document.getElementById('c3kReferenceEditorForm')){
+    if(!root)return;
+    root.setAttribute('autocomplete','off');
+    root.setAttribute('data-form-type','other');
+    root.setAttribute('data-1p-ignore','true');
+    root.setAttribute('data-lpignore','true');
+    root.setAttribute('data-bwignore','true');
+    root.setAttribute('data-protonpass-ignore','true');
+    root.querySelectorAll('input,textarea').forEach(el=>{
+      if(el.type==='file'||el.type==='date'||el.type==='number'||el.type==='url')return;
+      if(el.tagName==='INPUT'&&(!el.type||el.type==='text')){try{el.type='search';}catch{}}
+      el.setAttribute('autocomplete','one-time-code');
+      el.setAttribute('autocorrect','off');
+      el.setAttribute('spellcheck','false');
+      el.setAttribute('data-form-type','other');
+      el.setAttribute('data-1p-ignore','true');
+      el.setAttribute('data-lpignore','true');
+      el.setAttribute('data-bwignore','true');
+      el.setAttribute('data-protonpass-ignore','true');
+      if(el.dataset.c3kPmReady==='1')return;
+      el.dataset.c3kPmReady='1';
+      if(!el.disabled){
+        el.readOnly=true;
+        const unlock=()=>{el.readOnly=false;};
+        const relock=()=>{if(document.activeElement!==el)el.readOnly=true;};
+        el.addEventListener('pointerdown',unlock,{passive:true});
+        el.addEventListener('keydown',unlock,{passive:true});
+        el.addEventListener('focus',unlock,{passive:true});
+        el.addEventListener('blur',()=>setTimeout(relock,0),{passive:true});
+      }
+    });
   }
   const status=(msg,type='')=>{const n=document.getElementById('c3kReferenceEditorStatus');n.hidden=false;n.className='c3k-ref-editor-status'+(type?` is-${type}`:'');n.textContent=msg;};
   function openEditor(ref,col,key,isNew,opts={}){
@@ -329,6 +361,7 @@
     if(ref==='maritime'&&(col==='entities'||col==='vessels')){const isVessel=col==='vessels',mediaUrl=String(isVessel?item.photoUrl:item.logoUrl||'');fields.insertAdjacentHTML('beforeend',`<div class="c3k-ref-media-box"><div class="c3k-ref-media-preview${isVessel?' is-vessel-photo':''}" id="c3kRefMediaPreview">${mediaUrl?`<img src="${esc(mediaUrl)}" alt="${isVessel?'Photo navire':'Logo'}">`:(isVessel?'PHOTO':'LOGO')}</div><div class="c3k-ref-media-copy"><strong>${isVessel?'Photo du navire':'Logo compagnie'}</strong><input id="c3kRefMediaFile" type="file" accept="image/png,image/jpeg,image/webp"><small>PNG, JPG ou WebP · 2 Mo maximum. ${isVessel?'La photo apparaît dans la tuile du navire.':'Le logo devient prioritaire partout dans Cotation 3000.'}</small></div></div>`);}
     if(ref==='maritime'&&col==='vessels')setupMaritimeVesselSelectors(fields);
     if(ref==='maritime'&&col==='entities')setupMaritimeEntitySelectors(fields,addKind);
+    hardenEditorAgainstPasswordManagers(fields);
     const form=document.getElementById('c3kReferenceEditorForm');form.dataset.ref=ref;form.dataset.collection=col;form.dataset.key=key;form.dataset.new=isNew?'1':'0';form.dataset.addKind=addKind;form.dataset.base=JSON.stringify(stored?.base_snapshot??(!isNew?item:null));
     const del=document.getElementById('c3kReferenceEditorDelete'),reset=document.getElementById('c3kReferenceEditorReset');del.hidden=!isSuper()||isNew||colDef.allowDelete===false;reset.hidden=!isSuper()||isNew||!stored;
     del.onclick=()=>deleteEntry(ref,col,key);reset.onclick=()=>resetEntry(ref,col,key);const saveBtn=document.getElementById('c3kReferenceEditorSave');saveBtn.onclick=()=>saveForm(form);document.getElementById('c3kReferenceEditorStatus').hidden=true;document.getElementById('c3kReferenceEditorBackdrop').hidden=false;

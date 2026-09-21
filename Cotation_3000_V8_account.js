@@ -1,4 +1,4 @@
-/* Cotation 3000 V8.0.22 DEV — comptes / Supabase / présence / signalements */
+/* Cotation 3000 V8.0.37 DEV — comptes / Supabase / présence / signalements */
 (() => {
   'use strict';
   const SUPABASE_URL='https://mhnujvgzoozimtbrasuh.supabase.co';
@@ -66,6 +66,11 @@
     qs('#c3kV8ReportSend')?.addEventListener('click',sendReport);
     document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAccount();const p=qs('#c3kV8ReportPop');if(p)p.hidden=true;}});
   }
+  function scrubAuthPasswords(){
+    qsa('#c3kV8LoginForm input[type="password"],#c3kV8SignupForm input[type="password"]').forEach(input=>{
+      input.value='';input.defaultValue='';input.setAttribute('autocomplete','current-password');
+    });
+  }
   function openReportPop(){const p=qs('#c3kV8ReportPop');if(!p)return;p.hidden=false;qs('#c3kV8ReportMessage')?.focus();}
   function openAccount(mode){requestedAuthMode=mode||requestedAuthMode||'login';qs('#c3kV8AccountBackdrop').hidden=false;document.body.style.overflow='hidden';renderAccount();}
   function closeAccount(){const n=qs('#c3kV8AccountBackdrop');if(n)n.hidden=true;document.body.style.overflow='';}
@@ -91,7 +96,7 @@
     qs('#c3kV8SignupForm')?.addEventListener('submit',signup);qs('#c3kV8LoginForm')?.addEventListener('submit',login);
   }
   async function signup(e){e.preventDefault();const fd=new FormData(e.currentTarget),st=qs('#c3kV8AuthStatus');const first_name=String(fd.get('first_name')||'').trim(),username=String(fd.get('username')||'').trim(),email=String(fd.get('email')||'').trim(),password=String(fd.get('password')||'');toast(st,'Création du compte…');const {data,error}=await client.auth.signUp({email,password,options:{emailRedirectTo:PRODUCTION_URL,data:{first_name,username}}});if(error){toast(st,error.message,'error');return;}if(data.session)toast(st,'Compte créé et connecté.','ok');else toast(st,'Confirme la création de ton compte en cliquant sur le lien reçu par e-mail.','ok');}
-  async function login(e){e.preventDefault();const fd=new FormData(e.currentTarget),st=qs('#c3kV8AuthStatus');toast(st,'Connexion…');const {error}=await client.auth.signInWithPassword({email:String(fd.get('email')||'').trim(),password:String(fd.get('password')||'')});if(error)toast(st,error.message,'error');}
+  async function login(e){e.preventDefault();const form=e.currentTarget,fd=new FormData(form),st=qs('#c3kV8AuthStatus');toast(st,'Connexion…');const {error}=await client.auth.signInWithPassword({email:String(fd.get('email')||'').trim(),password:String(fd.get('password')||'')});if(error){toast(st,error.message,'error');return;}form.reset();scrubAuthPasswords();}
 
   async function refreshHeaderAction(){
     const btn=qs('#c3kV8NotifyBtn'),dot=qs('#c3kV8NotifyDot'),icon=qs('#c3kV8HeaderActionIcon');if(!btn||!dot||!icon)return;const actions=btn.parentElement;
@@ -126,7 +131,7 @@
 
   async function setupPresence(){try{if(presenceChannel)await client.removeChannel(presenceChannel);}catch{}let guestKey=localStorage.getItem('cotation3000.presence.guest.v1');if(!guestKey){guestKey=crypto.randomUUID?.()||Math.random().toString(36).slice(2);nativeSetItem.call(localStorage,'cotation3000.presence.guest.v1',guestKey);}const key=session?.user?.id||`guest:${guestKey}`;presenceChannel=client.channel('c3k-online',{config:{presence:{key}}});presenceChannel.on('presence',{event:'sync'},()=>{const state=presenceChannel.presenceState();const count=Object.keys(state||{}).length;qsa('[data-c3k-online-count]').forEach(n=>{n.textContent=`${count} connecté${count>1?'s':''}`;});});presenceChannel.subscribe(async status=>{if(status==='SUBSCRIBED'){await presenceChannel.track({user_id:session?.user?.id||null,pseudo:profile?.username||null,role:profile?.role||'guest',online_at:new Date().toISOString()});}});}
   async function touchPresence(){if(session?.user)client.from('profiles').update({last_seen_at:new Date().toISOString()}).eq('id',session.user.id).then(()=>{}).catch(()=>{});}
-  async function handleSession(next){session=next;await loadProfile();await setupPresence();if(session?.user)await syncAccountData(false);updateAccountHeader();if(!qs('#c3kV8AccountBackdrop')?.hidden)renderAccount();touchPresence();}
+  async function handleSession(next){session=next;await loadProfile();await setupPresence();if(session?.user){scrubAuthPasswords();await syncAccountData(false);}updateAccountHeader();if(!qs('#c3kV8AccountBackdrop')?.hidden)renderAccount();touchPresence();}
   async function init(){buildUi();if(!window.supabase?.createClient){qs('#c3kV8AccountLabel').textContent='Compte indisponible';return;}client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});window.COTATION3000_SUPABASE=client;const {data}=await client.auth.getSession();await handleSession(data.session||null);client.auth.onAuthStateChange((_event,next)=>{setTimeout(()=>handleSession(next).catch(()=>{}),0);});setInterval(touchPresence,60000);setInterval(()=>{if(isAdmin())refreshHeaderAction().catch(()=>{});},30000);}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
