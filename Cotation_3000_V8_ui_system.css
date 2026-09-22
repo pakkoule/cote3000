@@ -1,0 +1,125 @@
+/* Cotation 3000 V8.0.41 — Design system léger (U02/U03/U07/U11/U21/U36/U44) */
+:root{
+  --c3k-radius-xs:6px;
+  --c3k-radius-sm:8px;
+  --c3k-radius-md:10px;
+  --c3k-radius-lg:14px;
+  --c3k-radius-xl:18px;
+  --c3k-radius-pill:999px;
+  --c3k-shadow-xs:0 1px 3px rgba(29,24,17,.08);
+  --c3k-shadow-sm:0 3px 10px rgba(29,24,17,.10);
+  --c3k-shadow-md:0 10px 30px rgba(29,24,17,.16);
+  --c3k-shadow-lg:0 22px 64px rgba(0,0,0,.30);
+  --c3k-glass-bg:rgba(255,255,255,.88);
+  --c3k-glass-bg-strong:rgba(255,255,255,.94);
+  --c3k-glass-line:rgba(133,117,78,.34);
+  --c3k-badge-bg:#f3efe6;
+  --c3k-badge-fg:#5e533c;
+  --c3k-badge-line:#d8cfbc;
+}
+
+/* U02 — rayons cohérents */
+.table-card,.saved-cities,.toolbar-center,.universal-search-shell,.c3k-v8-account-shell{
+  border-radius:var(--c3k-radius-md)!important;
+}
+.fuel-reference-dialog,.iso-reference-dialog,.vat-reference-dialog,.adr-reference-dialog,
+.world-ports-dialog,.maritime-reference-dialog,.customs-reference-dialog,.loti-reference-dialog,
+.transport-lexicon-dialog,.account-reference-dialog,.port-reference-dialog,.quote-history-dialog,
+.route-origin-dialog,.waiting-fee-dialog,.parking-fee-dialog,.towing-weight-dialog,
+.c3k-v8-panel,.c3k-client-directory,.c3k-client-editor,.c3k-reference-editor{
+  border-radius:var(--c3k-radius-lg)!important;
+}
+.card-ghost-btn,.fuel-reference-tab,.fuel-reference-view-tab,.fuel-reference-month-choice,
+.saved-selection-mode button,.c3k-v8-primary,.c3k-v8-secondary,.c3k-v8-danger,
+.c3k-v8-menu button,.c3k-v8-tabs button,.c3k-v8-form input,.c3k-v8-form textarea,.c3k-v8-form select{
+  border-radius:var(--c3k-radius-sm)!important;
+}
+
+/* U03 — ombres hiérarchisées */
+.toolbar-center,.saved-cities,.universal-search-shell,.c3k-v8-account-shell{box-shadow:var(--c3k-shadow-sm)!important}
+.fuel-reference-dialog,.iso-reference-dialog,.vat-reference-dialog,.adr-reference-dialog,
+.world-ports-dialog,.maritime-reference-dialog,.customs-reference-dialog,.loti-reference-dialog,
+.transport-lexicon-dialog,.account-reference-dialog,.port-reference-dialog,.quote-history-dialog,
+.route-origin-dialog,.waiting-fee-dialog,.parking-fee-dialog,.towing-weight-dialog,
+.c3k-v8-panel,.c3k-client-directory,.c3k-client-editor,.c3k-reference-editor{box-shadow:var(--c3k-shadow-lg)!important}
+.card-ghost-btn,.fuel-reference-tab,.fuel-reference-view-tab,.fuel-reference-month-choice{box-shadow:var(--c3k-shadow-xs)}
+.card-ghost-btn:hover,.fuel-reference-tab:hover,.fuel-reference-view-tab:hover,.fuel-reference-month-choice:hover{box-shadow:var(--c3k-shadow-sm)}
+
+/* U11 — effet verre réservé aux fenêtres importantes */
+.fuel-reference-dialog,.iso-reference-dialog,.vat-reference-dialog,.adr-reference-dialog,
+.world-ports-dialog,.maritime-reference-dialog,.customs-reference-dialog,.loti-reference-dialog,
+.transport-lexicon-dialog,.account-reference-dialog,.port-reference-dialog,.quote-history-dialog,
+.route-origin-dialog,.waiting-fee-dialog,.parking-fee-dialog,.towing-weight-dialog,
+.c3k-v8-panel,.c3k-client-directory,.c3k-client-editor,.c3k-reference-editor{
+  background:var(--c3k-glass-bg-strong)!important;
+  border-color:var(--c3k-glass-line)!important;
+  -webkit-backdrop-filter:blur(14px) saturate(118%);
+  backdrop-filter:blur(14px) saturate(118%);
+}
+.fuel-reference-head,.iso-reference-head,.vat-reference-head,.adr-reference-head,
+.world-ports-head,.maritime-reference-head,.customs-reference-head,.loti-reference-head,
+.transport-lexicon-head,.c3k-v8-panel-head,.c3k-client-directory-head,.c3k-client-editor>header{
+  background:rgba(250,248,243,.86)!important;
+  -webkit-backdrop-filter:blur(10px);
+  backdrop-filter:blur(10px);
+}
+
+/* U21 — langage commun pour les badges. Les couleurs métier restent conservées. */
+.c3k-badge,
+.saved-cities-count,.favorites-count-badge,.quote-history-count,.workspace-width-badge,
+.c3k-v8-role,.c3k-v8-sync-pill,.mail-test-badge,.port-reference-badge,.account-number-badge,
+.account-code-badge,.universal-search-result-state.is-account-code,.fuel-archive-status,
+.c3k-google-badge,.c3k-europe-country-badge{
+  border-radius:var(--c3k-radius-pill)!important;
+  font-weight:850!important;
+  line-height:1!important;
+  letter-spacing:.025em!important;
+}
+.c3k-badge{
+  display:inline-flex;align-items:center;justify-content:center;gap:4px;
+  min-height:20px;padding:4px 8px;border:1px solid var(--c3k-badge-line);
+  background:var(--c3k-badge-bg);color:var(--c3k-badge-fg);font-size:8px;
+  box-shadow:var(--c3k-shadow-xs);
+}
+
+/* U07 — style commun de la bibliothèque d'icônes */
+.c3k-ui-icon,.c3k-icon{
+  width:15px;height:15px;display:inline-block;flex:0 0 auto;
+  fill:none;stroke:currentColor;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round;
+}
+.card-ghost-btn>.c3k-ui-icon{width:14px;height:14px}
+.c3k-v8-action-icon .c3k-ui-icon,.c3k-v8-account-icon .c3k-ui-icon{width:13px;height:13px}
+
+/* U36 — espace courant dans le header */
+.c3k-space-indicator{
+  position:absolute;right:12px;top:10px;z-index:4;max-width:min(260px,38%);
+  display:inline-flex;align-items:center;gap:7px;min-height:27px;padding:5px 9px;
+  border:1px solid rgba(133,117,78,.32);border-radius:var(--c3k-radius-pill);
+  background:rgba(255,255,255,.84);color:#5a5039;box-shadow:var(--c3k-shadow-sm);
+  -webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);
+  font-size:8px;font-weight:850;letter-spacing:.025em;white-space:nowrap;
+}
+.c3k-space-indicator svg{width:13px;height:13px}
+.c3k-space-indicator-label{overflow:hidden;text-overflow:ellipsis}
+.c3k-space-indicator::before{content:"ESPACE";font-size:6px;font-weight:900;letter-spacing:.09em;color:#9a8c6e}
+
+/* U44 — compteur numérique, plus informatif que le simple point rouge */
+.c3k-v8-notify-count{
+  position:absolute;top:-5px;right:-5px;z-index:2;display:inline-flex;align-items:center;justify-content:center;
+  min-width:16px;height:16px;padding:0 4px;border:2px solid #fff;border-radius:var(--c3k-radius-pill);
+  background:#c93636;color:#fff;font-size:7px;font-weight:900;line-height:1;box-shadow:0 2px 5px rgba(113,22,22,.24);
+}
+.c3k-v8-notify-count[hidden]{display:none!important}
+.c3k-v8-notify-dot{display:none!important}
+
+@media(max-width:760px){
+  .c3k-space-indicator{right:7px;top:7px;max-width:44%;padding:4px 7px;min-height:24px}
+  .c3k-space-indicator::before{display:none}
+}
+@media(max-width:520px){
+  .c3k-space-indicator{position:relative;right:auto;top:auto;margin:2px auto 5px;max-width:calc(100% - 16px);width:max-content}
+  .top-header{flex-direction:column!important}
+}
+
+/* V9.0.0 — badge service Google protégé */
+.c3k-europe-secure-badge{display:inline-flex;align-items:center;min-height:38px;padding:0 12px;border:1px solid rgba(133,117,78,.38);border-radius:var(--c3k-radius-control,10px);background:rgba(255,255,255,.72);box-shadow:var(--c3k-shadow-1,0 2px 8px rgba(0,0,0,.08));font-size:12px;font-weight:800;letter-spacing:.02em;color:#5f553c;white-space:nowrap}

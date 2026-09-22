@@ -17,7 +17,7 @@ window.C3K_ADR_REFERENCE={"version":"ADR / IMDG Cotation 3000 V3.1","un":[{"un":
   }
   const classMap=new Map((REG.classes||[]).map(x=>[String(x.class),x]));
   const classIconLabels={1:'Explosifs',2:'Gaz',3:'Liquides inflammables',4:'Solides / réactions dangereuses',5:'Comburants / peroxydes',6:'Toxiques / infectieux',7:'Radioactif',8:'Corrosifs',9:'Dangers divers'};
-  const classIconPath=cls=>`adr-icons/class-${clsBase(cls)}.png`;
+  const classIconPath=cls=>`adr-class-${clsBase(cls)}.png`;
   const classIcon=cls=>`<img class="adr-class-picto" src="${esc(classIconPath(cls))}" alt="Repère ADR classe ${esc(clsBase(cls))} — ${esc(classIconLabels[clsBase(cls)]||'marchandises dangereuses')}" loading="lazy"/>`;
   let activeClass='all', query='';
   function classFamily(cls){

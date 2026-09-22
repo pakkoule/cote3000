@@ -87,7 +87,6 @@ window.C3K_MARITIME_REFERENCE={"meta":{"title":"Référentiel compagnies maritim
     return norm([r.groupId,r.entityId,r.entity,r.parent,r.relation,r.status2026,r.europeStatus,r.parentCountry,r.parentProfile,r.coverage,r.inV4,'compagnie maritime armateur shipping line filiale marque groupe'].join(' '));
   }
   function countryInfo(code){return window.C3K_COUNTRY_FLAGS?.get?.(code)||null;}
-  function flagEmoji(code){return countryInfo(code)?.flag||'';}
   function flagImage(code,width=28){return window.C3K_COUNTRY_FLAGS?.imageUrl?.(code,width)||'';}
   function trackingInfo(r){
     const imo=String(r.imo||'').replace(/\D+/g,'');

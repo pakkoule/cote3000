@@ -1,102 +1,110 @@
-# Cotation 3000 V8.0.37 DEV
+# Cotation 3000 V9.0.1.2.6
 
-Version de développement splittée de Cotation 3000, prête pour GitHub + Netlify.
+## V9.0.1 — socle sécurisé
 
-## V8.0.37 — correctif boutons Ajouter des gros référentiels
-- Ports mondiaux SMDG, Compagnies maritimes et Douane : le bouton `+ Ajouter` dispose maintenant de sa propre largeur et ne chevauche plus la croix de fermeture.
-- Le titre reste flexible et les deux actions restent séparées.
-- Sur petit écran, `+ Ajouter` devient un bouton compact `+`.
+Première étape de la roadmap V9. Cette version conserve volontairement les référentiels statiques actuels pour éviter toute régression, mais prépare leur sortie progressive du frontend.
 
-## Fichiers runtime
-- `index.html` — application principale
-- `Cotation_3000_V8_communes.js` — dataset communes externalisé
-- `Cotation_3000_V8_account.js` / `.css` — comptes, profils, présence, signalements et administration
-- `Cotation_3000_V8_adr.js` / `.css` — référentiel ADR / IMDG
-- `Cotation_3000_V8_ports_world.js` / `.css` — référentiel mondial Ports & Terminaux SMDG
-- `Cotation_3000_V8_maritime_companies.js` / `.css` — compagnies maritimes / filiales / navires Le Havre
-- `Cotation_3000_V8_customs.js` / `.css` — référentiel Douane / ICS2 / NCTS V2
-- `Cotation_3000_V8_reference_editor.js` / `.css` — couche d’édition ADMIN/SUPERADMIN
-- `Cotation_3000_V8_legacy_references.js` — pont des référentiels historiques vers la couche d’overrides Supabase
-- `adr-icons/` — pictogrammes ADR
-- `netlify.toml` — publication statique depuis la racine
+### Principales évolutions
+- clé Google retirée du navigateur ; calcul Europe via Function Netlify authentifiée ;
+- nouveau socle réseau/cache/erreurs `Cotation_3000_V9_core.js` ;
+- quota serveur Google par utilisateur ;
+- RLS auditée sur les tables `public` ;
+- accès anonyme supprimé de `reference_overrides` et `fuel_base_history` ;
+- tables techniques V9 déplacées dans le schéma privé Supabase ;
+- headers HTTP renforcés ;
+- aucun changement fonctionnel volontaire sur Communes/Lamy, Ports, Maritime, ADR, Douane, Annuaire, cotation ou favoris.
 
-## V8.0.37 DEV — édition fiabilisée + base des villes
-- Fenêtre d’édition portée au-dessus de tous les référentiels ouverts.
-- Boutons **✏ Modifier** fiabilisés via gestion déléguée des clics.
-- Les boutons d’édition n’élargissent plus les tableaux : retour à la ligne forcé et largeur des tableaux contenue dans la fenêtre.
-- **Lexique**, **TRM/LOTI** et **TVA** : ajout d’entrées disponible pour SUPERADMIN. Les nouveaux IDs Lexique et LOTI sont préremplis automatiquement.
-- **TVA** : une nouvelle destination peut être classée **INTRACOM** ou **HORS INTRACOM**, avec codes ISO et liste ports/villes.
-- **Base des villes** : modification des communes existantes et ajout d’une ville par SUPERADMIN, avec choix du département, de la **Zone Lamy** et de la distance. La source GitHub des 40 793 communes reste intacte ; Supabase stocke les overrides.
-- Entêtes du **Lexique transport** recolorés en doré clair avec texte sombre pour corriger leur lisibilité.
-- `reference_overrides` accepte désormais la famille `communes`, toujours avec RLS et journalisation dans `data_change_log`.
+### Configuration obligatoire Netlify
+Dans **Site configuration → Environment variables**, ajouter :
+- `GOOGLE_MAPS_API_KEY` = nouvelle clé Google serveur ;
+- `SUPABASE_SERVICE_ROLE_KEY` = clé service-role Supabase (uniquement côté Netlify).
 
-Les ADMIN peuvent modifier les entrées existantes. Les SUPERADMIN peuvent en plus ajouter les entrées autorisées et restaurer la version source.
+`SUPABASE_URL` et `SUPABASE_PUBLISHABLE_KEY` peuvent aussi être définies, mais la Function contient déjà les valeurs publiques de secours.
 
-### Garde-fous
-- Base des villes : suppression désactivée pour cette première version ; modification et ajout sont autorisés.
-- TVA : ajout autorisé, suppression toujours désactivée pour préserver le découpage historique.
-- Surcharges carburant : les taux mensuels sont éditables séparément des lignes clients ; l’ajout concerne les lignes clients.
-- Les fichiers source GitHub restent intacts : Supabase agit comme couche d’overrides jusqu’au futur export consolidé XLSX/JSON.
+Après configuration, redéployer le site. La clé Google historiquement exposée dans les versions V8 doit être **rotatée/révoquée dans Google Cloud**.
 
-## Sources référentielles embarquées
-- `Referentiel_ADR_IMDG_Cotation3000_V3.xlsx`
-- `Referentiel_Ports_Conteneurs_SMDG_V2.xlsx`
-- `Referentiel_Compagnies_Maritimes_2026_V5.xlsx`
-- `Referentiel_Douane_ICS2_NCTS_V2.xlsx`
+### Structure du dépôt
+Tout reste à la racine comme auparavant, à l'exception de `netlify/functions/google-route.js`, sous-dossier techniquement nécessaire à Netlify Functions.
 
-## Référentiels déjà éditables
-- ADR / IMDG
-- Ports mondiaux SMDG
-- Compagnies maritimes
-- Douane / ICS2 / NCTS
-- ISO des conteneurs
-- TVA intracommunautaire
-- Surcharges carburant
-- TRM pratique / LOTI
-- Lexique transport
-- Comptes TVA
-- Lieux portuaires
-- Base des villes / communes (Zone Lamy)
-
-## Fonctions V8 conservées
-- Authentification Supabase et rôles USER / CONTRIBUTOR / EDITOR / ADMIN / SUPERADMIN.
-- Favoris et préférences synchronisés au compte.
-- Signalements Bug / Suggestion / Manque base / Correction référentiel.
-- Historique **Modifications BDD** dans le registre administrateur.
-- Upload de logos compagnies dans Supabase Storage.
-- Recherche universelle synchronisée après édition.
-- Mode Empilement avec option **Aller-retour** et contrôle Retour masqué.
-
-## Déploiement Netlify
-Aucune commande de build. Publier la racine (`.`).
-
-### V8.0.37 — correctif boutons Modifier base des villes
-- Correction structurelle de la duplication récursive des boutons `Modifier` dans le tableau des communes.
-- Les boutons d'action utilisent désormais des attributs dédiés (`data-c3k-edit-*`) et ne peuvent plus être rescannés comme des fiches éditables.
-- Nettoyage automatique des anciens boutons imbriqués éventuellement déjà présents dans le DOM.
-- Un seul bouton `Modifier` est conservé par ligne, y compris après recherche, filtre, pagination ou rafraîchissement des référentiels.
+### Sécurité
+Voir `SECURITY_V9.0.1.md` et `20260922_v9_security_verify.sql`.
 
 
-## V8.0.37 — synchro des communes ajoutées
-- Corrige l’injection des nouvelles communes Supabase dans la table principale.
-- Les lignes historiques sont désormais reconnues par leur clé stable `base-<index>` lors des synchronisations.
-- Reconstruction immédiate des index de recherche/filtres/pagination après ajout ou modification.
-- Après ajout, la nouvelle commune est automatiquement recherchée et affichée dans le tableau.
+## V9.0.1 — Communes / Lamy
+Moteur Supabase privé + RPC authentifiée + cache navigateur + Shadow Mode de comparaison avec le moteur local. Voir `SECURITY_V9.0.1.md` et `20260922_v901_communes_shadow.sql`.
 
 
-## V8.0.37 DEV
-- Header : les vagues sont abaissées et masquées sous le bloc de connexion, puis réapparaissent sous sa base pour une intégration plus propre.
+## V9.0.1.1 — Société libre + répertoire interne
+
+- lors de la création/modification d’un contact, le champ Société accepte désormais une saisie libre avec suggestions ;
+- si la société saisie n’existe pas, elle est créée automatiquement dans `client_companies` puis liée au contact ;
+- contrôle anti-doublon normalisé côté PostgreSQL ;
+- nouvel onglet **Interne** dans l’annuaire, visible uniquement aux membres authentifiés ;
+- entrée initiale : **Standard — Ligne 11 — 02 35 13 01 81** ;
+- création/modification/désactivation des lignes internes réservée au superadmin ;
+- migration : `20260922_v9011_client_company_internal_directory.sql`.
 
 
-## V8.0.37 — fiches navires enrichies
-- Cadre photo navire avec upload Supabase.
-- IMO modifiable grâce à une clé interne stable.
-- Base ISO 3166-1 de 249 pavillons avec drapeaux.
-- Longueur totale, année de construction, VesselFinder/MarineTraffic et favicon.
-- Choix de la rubrique avant ajout (groupes/filiales/navires, ports/terminaux/opérateurs, etc.).
+## V9.0.1.2 — Badges services + recherche universelle privée
+
+- chaque ligne interne possède désormais une **couleur de badge** et une **icône personnalisée** ;
+- palette rapide + sélecteur de couleur libre ;
+- icône personnalisable par emoji/symbole court, avec presets ;
+- le champ **Service** propose les services déjà utilisés et reprend leur couleur/icône lors de la sélection ;
+- les cartes de lignes internes affichent le **numéro de ligne en grand dans un carré** reprenant la couleur du service ;
+- le service est affiché sous forme de badge coloré avec son icône ;
+- lorsque l’utilisateur est connecté, la **recherche universelle** retourne aussi les contacts, sociétés et lignes internes ;
+- recherche des lignes internes également par numéro de ligne ou numéro de téléphone, y compris en saisie numérique compacte ;
+- un résultat privé ouvre directement le bon onglet de l’annuaire avec le filtre correspondant ;
+- migration : `20260922_v9012_internal_directory_badges.sql`.
 
 
-## V8.0.37 — correctifs intégrés
-- Anti-spam Google Password Manager directement intégré à l’éditeur de référentiels.
-- Nettoyage immédiat du champ mot de passe après authentification.
-- Suppression du pavillon dupliqué en haut des tuiles navire ; le pavillon reste uniquement dans « PAVILLON AIS ».
+## V9.0.1.2.1 — Badge de ligne dans la recherche universelle
+
+- les résultats de type **ligne interne** n'affichent plus `Ligne 11` comme simple texte à droite ;
+- le numéro (`11`) est affiché dans un **grand badge carré** avec la mention `LIGNE` ;
+- le fond du badge reprend exactement la valeur `badge_color` enregistrée dans la fiche de l'annuaire interne ;
+- la couleur du texte est calculée automatiquement pour conserver un contraste lisible ;
+- le badge conserve en infobulle le libellé complet de la ligne ;
+- aucun changement de schéma Supabase n'est nécessaire pour ce correctif.
+
+
+## V9.0.1.2.3 — Correctif Tronçon Europe / Failed to fetch
+
+- appel navigateur principal déplacé vers `/api/route-distance` ;
+- rewrite Netlify interne vers `/.netlify/functions/google-route` ;
+- déclaration moderne du dossier Functions via `[functions].directory` ;
+- fallback automatique vers l’ancien endpoint si l’alias n’est pas disponible ;
+- timeout et gestion des erreurs réseau renforcés côté Function ;
+- les erreurs réseau ne remontent plus sous la forme brute `Failed to fetch` ;
+- `GET /api/route-distance` sert de contrôle de santé léger après déploiement.
+
+
+## V9.0.1.2.4 — Étiquettes visuelles des membres
+
+- SUPERADMIN : création/modification d’une étiquette visuelle pour chaque membre, y compris lui-même.
+- Intitulé libre, icône/emoji, couleur unie ou dégradé.
+- 12 variations proposées + couleurs personnalisées et orientation du dégradé.
+- Affichage de l’étiquette dans la liste des membres en ligne et dans le registre des comptes.
+- Le rôle technique reste séparé et continue seul à gérer les permissions.
+- `♛ PREMIUM` doré reste le rendu par défaut du SUPERADMIN.
+- Supabase : table `member_role_labels`, RLS lecture authentifiée et écriture SUPERADMIN uniquement.
+
+
+## V9.0.1.2.5 — 10 nouveaux avatars camion + fin des avatars personnalisés
+
+- ajout de **10 nouvelles variations de camions** à la galerie d’avatars ;
+- le choix d’avatar repose désormais uniquement sur une **galerie prédéfinie** de camions ;
+- la possibilité d’**importer un avatar personnalisé** est supprimée de l’éditeur de profil ;
+- l’affichage des profils et des membres en ligne n’utilise plus les anciens avatars uploadés ;
+- l’enregistrement du profil force désormais `avatar_kind = base` et vide `avatar_url`.
+
+
+## V9.0.1.2.6 — Import annuaire interne
+
+- import des **31 lignes internes** du fichier `telephones.xlsx` ;
+- 18 lignes disposent d’un numéro direct et 13 utilisent uniquement leur numéro de ligne interne ;
+- remplacement de l’ancienne entrée d’exemple `Standard — Ligne 11` par `EMILIE — Ligne 11 — 02 35 13 01 81` ;
+- le champ téléphone direct de l’annuaire interne devient facultatif ;
+- aucune catégorie de service n’est inventée : les nouvelles lignes restent génériques jusqu’à attribution par le SUPERADMIN ;
+- migration : `20260922_v90126_internal_directory_telephones.sql`.
